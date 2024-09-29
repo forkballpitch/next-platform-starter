@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "preinstall": "npm install --legacy-peer-deps",
-    "postinstall": "npx patch-package react-canvas-draw",
+    "postinstall": "npx patch-package",
     "custom-build": "npm run preinstall && npm run postinstall && npm run build"
   },
   "dependencies": {
