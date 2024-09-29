@@ -2,18 +2,12 @@
   "name": "next-netlify-platform-starter",
   "version": "0.1.0",
   "private": true,
-  "resolutions": {
-    "react-canvas-draw/react": "^18.3.1",
-    "react-canvas-draw/react-dom": "^18.3.1"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "preinstall": "npx npm-force-resolutions",
-    "postinstall": "npx patch-package",
-    "custom-build": "npm run preinstall && npm run postinstall && npm run build"
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@netlify/blobs": "^8.0.1",
@@ -21,9 +15,9 @@
     "bright": "^0.8.5",
     "markdown-to-jsx": "^7.4.5",
     "next": "14.2.13",
+    "npm-force-resolutions": "^0.0.10",
     "patch-package": "^8.0.0",
     "react": "^18.3.1",
-    "react-canvas-draw": "^1.2.1",
     "react-dom": "^18.3.1",
     "unique-names-generator": "^4.7.1"
   },
