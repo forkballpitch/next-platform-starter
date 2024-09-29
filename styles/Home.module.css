@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.marioContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.marioImage {
+    width: 150px; /* 마리오 이미지 크기 */
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.marioText {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff6347; /* 텍스트 색상 (토마토 색상) */
+    animation: bounce 1s infinite; /* 글자 애니메이션 효과 */
+}
+
+/* 텍스트가 위아래로 점프하는 애니메이션 */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #0070f3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #005bb5;
+}
