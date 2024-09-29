@@ -1,3 +1,3 @@
 [build]
 publish = ".next"
-command = "npm install --legacy-peer-deps && npx patch-package react-canvas-draw && npm run build"
+command = "npm install --force && npx patch-package react-canvas-draw && npm run build"
