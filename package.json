@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "npx patch-package"
+    "preinstall": "npm install --legacy-peer-deps",
+    "postinstall": "npx patch-package react-canvas-draw",
+    "custom-build": "npm run preinstall && npm run postinstall && npm run build"
   },
   "dependencies": {
     "@netlify/blobs": "^8.0.1",
