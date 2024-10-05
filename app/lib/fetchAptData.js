@@ -4,9 +4,8 @@ import { XMLParser } from 'fast-xml-parser';
 export const fetchAptData = async () => {
     try {
 
-        const serviceKey = process.env.SERVICE_KEY;
         const response = await fetch(
-            `https://apis.data.go.kr/1613000/RTMSDataSvcAptTrade/getRTMSDataSvcAptTrade?serviceKey=${serviceKey}&LAWD_CD=11680&DEAL_YMD=202409&pageNo=1&numOfRows=1000`
+            `https://apis.data.go.kr/1613000/RTMSDataSvcAptTrade/getRTMSDataSvcAptTrade?serviceKey=uPBe0WsM2NosSYcm0xFIdYOynTpXBeDm1fcH5ZYOevJT9MnKAdEZlooImBdPPb7dDNXLag903rfo4J2Cxw7v8w%3D%3D&LAWD_CD=11680&DEAL_YMD=202409&pageNo=1&numOfRows=1000`
         );
         const xmlString = await response.text();
 
