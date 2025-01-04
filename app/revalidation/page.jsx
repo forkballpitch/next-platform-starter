@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import AptTable from '../../components/AptTable';
 
+const randomQuoteUrl = '/api/aptData';
+
 const Page = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);  // 로딩 상태를 관리
@@ -16,7 +18,7 @@ const Page = () => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);  // 데이터 로딩 시작
-            const response = await fetch(`/api/aptData?dealYmd=${dealYmd}`);
+            const response = await fetch(randomQuoteUrl, { cache: 'no-store' });//await fetch(`/netlify/functions/fetchAptData?dealYmd=${dealYmd}`);
             const data = await response.json();
             setData(data);
             setLoading(false);  // 데이터 로딩 완료
@@ -54,7 +56,7 @@ const styles = {
         width: '100%',
         height: '5px',
         marginBottom: '10px', // 테이블과 로딩 바 사이에 간격 추가
-        backgroundColor: '#fcfcfc',
+        backgroundColor: '#f0f0f0',
         position: 'relative'
     },
     loader: {
