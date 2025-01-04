@@ -3,7 +3,7 @@ const AptTable = ({ data }) => {
     return (
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-            <tr style={{ backgroundColor: '#f2f2f2', borderBottom: '2px solid #ddd' }}>
+            <tr style={{ backgroundColor: '#000a50', borderBottom: '2px solid #ddd' }}>
                 <th style={{ padding: '10px' }}>아파트 이름</th>
                 <th style={{ padding: '10px' }}>법정동</th>
                 <th style={{ padding: '10px' }}>지번</th>
