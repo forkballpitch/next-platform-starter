@@ -1,35 +1,36 @@
 {
-  "name": "next-netlify-platform-starter",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "postinstall": "patch-package"
-  },
-  "dependencies": {
-    "@netlify/blobs": "^8.0.1",
-    "blobshape": "^1.0.0",
-    "bright": "^0.8.5",
-    "fast-xml-parser": "^4.5.0",
-    "markdown-to-jsx": "^7.4.5",
-    "mongodb": "^6.12.0",
-    "next": "14.2.13",
-    "npm-force-resolutions": "^0.0.10",
-    "patch-package": "^8.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-naver-maps": "^0.1.4",
-    "unique-names-generator": "^4.7.1"
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.18",
-    "daisyui": "^4.12.8",
-    "eslint": "8.57.1",
-    "eslint-config-next": "14.2.13",
-    "postcss": "^8.4.36",
-    "tailwindcss": "^3.4.1"
-  }
+    "name": "next-netlify-platform-starter",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "postinstall": "patch-package"
+    },
+    "dependencies": {
+        "@netlify/blobs": "^8.0.1",
+        "blobshape": "^1.0.0",
+        "bright": "^0.8.5",
+        "fast-xml-parser": "^4.5.0",
+        "markdown-to-jsx": "^7.4.5",
+        "mongodb": "^6.12.0",
+        "next": "14.2.13",
+        "npm-force-resolutions": "^0.0.10",
+        "patch-package": "^8.0.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-naver-maps": "^0.1.4",
+        "unique-names-generator": "^4.7.1"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.18",
+        "daisyui": "^4.12.8",
+        "eslint": "8.57.1",
+        "eslint-config-next": "14.2.13",
+        "postcss": "^8.4.36",
+        "react-naver-maps": "^0.1.4",
+        "tailwindcss": "^3.4.1"
+    }
 }
