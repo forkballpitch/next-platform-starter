@@ -1,7 +1,10 @@
 'use client';
 // src/App.js
 import { NavermapsProvider } from 'react-naver-maps';
-import NaverMapsMarkerCluster from './components/NaverMapsMarkerCluster';
+
+import dynamic from 'next/dynamic';
+
+const NaverMapsMarkerCluster = dynamic(() => import('./components/NaverMapsMarkerCluster'), { ssr: false });
 
 function App() {
     // ncpClientId에 네이버 지도 API 클라이언트 키를 넣으면 된다.
