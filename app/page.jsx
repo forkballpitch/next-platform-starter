@@ -14,7 +14,7 @@ function App() {
 
     return (
         <NavermapsProvider
-            ncpClientId={naverKey} // 지도서비스 Client ID
+            ncpKeyId={naverKey} // 지도서비스 Client ID
             error={<p>error</p>}
             loading={<p>Maps Loading</p>}
         >
