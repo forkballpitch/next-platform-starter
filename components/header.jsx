@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import netlifyLogo from 'public/netlify-logo.svg';
 import { useState } from 'react';
 
 const navItems = [
@@ -45,10 +44,14 @@ export function Header() {
                             <Link
                                 href={item.href}
                                 className="inline-block px-1.5 py-1 transition hover:opacity-80 sm:px-3 sm:py-2"
-                                onClick={item.subMenu ? (e) => {
-                                    e.preventDefault();
-                                    toggleDropdown(index);
-                                } : undefined}
+                                onClick={
+                                    item.subMenu
+                                        ? (e) => {
+                                              e.preventDefault();
+                                              toggleDropdown(index);
+                                          }
+                                        : undefined
+                                }
                             >
                                 {item.linkText}
                             </Link>
@@ -71,7 +74,6 @@ export function Header() {
                     ))}
                 </ul>
             )}
-
         </nav>
     );
 }
