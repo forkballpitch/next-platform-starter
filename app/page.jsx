@@ -3,7 +3,6 @@
 import { NavermapsProvider } from 'react-naver-maps';
 
 import dynamic from 'next/dynamic';
-
 const NaverMapsMarkerCluster = dynamic(() => import('./components/NaverMapsMarkerCluster'), { ssr: false });
 
 function App() {
