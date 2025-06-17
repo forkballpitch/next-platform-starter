@@ -5,15 +5,32 @@ import { makeMarkerClustering } from './marker-cluster';
 import 학원DATA from '../../data/seoulAcademy.json';
 import { getCoordinates } from '../lib/getCoordinates';
 import SearchContext from './SearchContext';
+import { useRouter } from 'next/navigation'; // 맨 위에 추가
 
 function MarkerCluster() {
     const { keyword, applyFilter, setApplyFilter } = useContext(SearchContext);
     const navermaps = useNavermaps();
     const map = useMap();
+    const router = useRouter(); // ✅ 라우터 훅 사용
 
     const [cluster, setCluster] = useState(null);
     const markersRef = useRef([]); // ✅ 마커 보관용
     const [hasRun, setHasRun] = useState(false);
+    const clusterRef = useRef(null);
+
+    const currentInfoWindowRef = useRef(null); // ⬅️ 마커 말풍선 추적용
+
+    useEffect(() => {
+        const handleMarkerClick = (e) => {
+            const slug = e.detail;
+            router.push(`/screen/academy/${slug}`);
+        };
+
+        window.addEventListener('marker-click', handleMarkerClick);
+        return () => {
+            window.removeEventListener('marker-click', handleMarkerClick);
+        };
+    }, []);
 
     // ✅ 마커 최초 생성
     useEffect(() => {
@@ -38,8 +55,19 @@ function MarkerCluster() {
                     map: map
                 });
 
+                const slug = encodeURIComponent(item.aca_nm); // 혹은 ID
+
                 const infoWindow = new navermaps.InfoWindow({
-                    content: `<div style="padding:8px;font-size:12px;">🏫 ${item.aca_nm}</div>`,
+                    content: `
+                                <div style="padding:8px;font-size:12px;">
+                                🏫 ${item.aca_nm}
+                                <br/>
+                                <button onclick="window.dispatchEvent(new CustomEvent('marker-click', { detail: '${slug}' }))"
+                                        style="margin-top:4px;padding:4px 6px;border:none;background:#4B2EFF;color:white;border-radius:4px;cursor:pointer;">
+                                    ➡ 바로가기
+                                </button>
+                                </div>
+                            `,
                     backgroundColor: '#fff',
                     borderColor: '#333',
                     borderWidth: 1,
@@ -48,10 +76,18 @@ function MarkerCluster() {
                 });
 
                 navermaps.Event.addListener(marker, 'click', () => {
-                    if (infoWindow.getMap()) {
-                        infoWindow.close();
-                    } else {
-                        infoWindow.open(map, marker);
+                    if (currentInfoWindowRef.current) {
+                        currentInfoWindowRef.current.close(); // ✅ 이전 말풍선 닫기
+                    }
+                    infoWindow.open(map, marker); // ✅ 새 말풍선 열기
+                    currentInfoWindowRef.current = infoWindow; // ✅ 현재 참조 갱신
+                });
+
+                // ✅ 지도 클릭 시 말풍선 닫기 이벤트 추가
+                navermaps.Event.addListener(map, 'click', () => {
+                    if (currentInfoWindowRef.current) {
+                        currentInfoWindowRef.current.close();
+                        currentInfoWindowRef.current = null;
                     }
                 });
 
@@ -89,6 +125,8 @@ function MarkerCluster() {
                 }
             });
 
+            clusterRef.current = clusterInstance;
+
             setCluster(clusterInstance);
             setHasRun(true);
         }
@@ -99,6 +137,8 @@ function MarkerCluster() {
     // ✅ 검색 버튼 클릭 시 마커 스타일 업데이트
     useEffect(() => {
         if (!applyFilter || !markersRef.current.length) return;
+
+        const matchedMarkers = markersRef.current.filter(({ name }) => keyword && name.includes(keyword));
 
         markersRef.current.forEach(({ marker, name }) => {
             const isMatch = keyword && name.includes(keyword);
@@ -113,6 +153,13 @@ function MarkerCluster() {
                     : null
             );
         });
+
+        // ✅ 첫 번째 매칭되는 마커 위치로 이동
+        if (matchedMarkers.length > 0) {
+            const firstMatched = matchedMarkers[0].marker;
+            const position = firstMatched.getPosition();
+            map.morph(position, 17); // 17은 확대 레벨
+        }
 
         setApplyFilter(false); // ✅ 필터 완료 후 초기화
     }, [applyFilter, keyword]);

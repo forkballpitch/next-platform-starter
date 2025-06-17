@@ -4,8 +4,9 @@ import { Header } from '../components/header';
 import HeaderSearch from './components/HeaderSearch';
 import SearchContext from './components/SearchContext'; // ✅ 추가
 import Providers from './providers'; // ✅ Client 부분은 여기서 import
-
+import GoogleAd from './components/GoogleAd';
 import '../styles/globals.css';
+import Link from 'next/link'; // ✅ 추가
 
 export const metadata = {
     title: {
@@ -36,17 +37,22 @@ export default function RootLayout({ children }) {
                         {/* 👇 하단 탭바는 그대로 유지 */}
                         <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white border-t py-2 text-sm text-gray-700 shadow">
                             {[
-                                { label: '홈', icon: 'home' },
-                                { label: '분양', icon: 'event_note' },
-                                { label: '관심', icon: 'favorite' },
-                                { label: '전체', icon: 'menu' }
-                            ].map(({ label, icon }) => (
-                                <button key={label} className="flex flex-col items-center justify-center">
+                                { label: '홈', icon: 'home', path: '/' },
+                                { label: '분양', icon: 'event_note', path: '/분양' },
+                                { label: '관심', icon: 'favorite', path: '/screen/interest' },
+                                { label: '전체', icon: 'menu', path: '/전체' }
+                            ].map(({ label, icon, path }) => (
+                                <Link
+                                    href={path}
+                                    key={label}
+                                    className="flex flex-col items-center justify-center no-underline text-inherit"
+                                >
                                     <span className="material-symbols-outlined text-xl">{icon}</span>
                                     <span>{label}</span>
-                                </button>
+                                </Link>
                             ))}
                         </nav>
+                        <GoogleAd /> {/* ✅ 여기에 위치해야 합니다 */}
                     </div>
                 </Providers>
             </body>
