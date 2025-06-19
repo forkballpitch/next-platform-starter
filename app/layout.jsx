@@ -31,12 +31,18 @@ export default function RootLayout({ children }) {
             <body className="antialiased bg-white text-black">
                 <Providers>
                     <div className="flex flex-col min-h-screen pb-16">
-                        {/* ✅ 상단 검색 헤더 삽입 */}
-                        <HeaderSearch />
-                        <main className="flex-1 overflow-y-auto min-h-0">{children}</main>
-                        {/* 👇 하단 탭바는 그대로 유지 */}
+                        {/* ✅ HeaderSearch 고정 */}
+                        <div className="fixed top-0 left-0 right-0 z-50">
+                            <HeaderSearch />
+                        </div>
+
+                        {/* ✅ 가운데 main에 padding-top 추가 (헤더 높이만큼 여유 줘야 가리지 않음) */}
+                        <main className="flex-1 overflow-y-auto min-h-0 pt-16">{children}</main>
+
+                        {/* ✅ 하단 탭바 고정 */}
                         <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white border-t py-2 text-sm text-gray-700 shadow">
                             {[
+                                { label: '학원상담', icon: 'ask', path: '/screen/ask' },
                                 { label: '홈', icon: 'home', path: '/' },
                                 { label: '분양', icon: 'event_note', path: '/분양' },
                                 { label: '관심', icon: 'favorite', path: '/screen/interest' },
@@ -52,7 +58,9 @@ export default function RootLayout({ children }) {
                                 </Link>
                             ))}
                         </nav>
-                        <GoogleAd /> {/* ✅ 여기에 위치해야 합니다 */}
+
+                        {/* 광고 */}
+                        <GoogleAd />
                     </div>
                 </Providers>
             </body>
