@@ -48,7 +48,6 @@ export default function AcademyQA() {
                     history.map((msg, idx) => (
                         <div
                             key={idx}
-                            ref={idx === history.length - 1 ? endRef : null} // ✅ 마지막 항목에 ref 연결
                             className={`mb-3 p-3 rounded border bg-gray-50 whitespace-pre-wrap ${
                                 msg.role === 'user' ? 'text-gray-700' : 'text-black'
                             }`}
@@ -57,6 +56,7 @@ export default function AcademyQA() {
                         </div>
                     ))
                 )}
+                <div ref={endRef} />
             </div>
 
             {/* 입력창 (고정) */}
