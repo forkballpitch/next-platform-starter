@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useChatHistory from '../../hooks/useChatHistory';
 
 export default function AcademyQA() {
     const [query, setQuery] = useState('');
     const [loading, setLoading] = useState(false);
     const { history, addToHistory } = useChatHistory('academy-qa');
-    const scrollRef = useRef(null);
+    const endRef = useRef(null);
 
     const askLLM = async () => {
         if (!query.trim()) return;
@@ -34,22 +34,23 @@ export default function AcademyQA() {
         }
     };
 
-    // ✅ 최신 질문으로 스크롤 이동
     useEffect(() => {
-        scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+        endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, [history]);
 
     return (
-        <div className="flex flex-col h-screen bg-white text-black">
-            {/* Q&A 목록 */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-28">
+        <div className="flex flex-col h-[calc(100vh-56px-64px)] relative">
+            {' '}
+            {/* 헤더+네비 높이 제외 */}
+            {/* Q&A 영역 */}
+            <div className="flex-1 overflow-y-auto px-4 pt-4 pb-36">
                 {history.length === 0 ? (
                     <p className="text-gray-500">아직 질문이 없습니다.</p>
                 ) : (
                     history.map((msg, idx) => (
                         <div
                             key={idx}
-                            className={`p-4 rounded border bg-gray-50 whitespace-pre-wrap ${
+                            className={`mb-3 p-3 rounded border bg-gray-50 whitespace-pre-wrap ${
                                 msg.role === 'user' ? 'text-gray-700' : 'text-black'
                             }`}
                         >
@@ -57,11 +58,10 @@ export default function AcademyQA() {
                         </div>
                     ))
                 )}
-                <div ref={scrollRef} />
+                <div ref={endRef} />
             </div>
-
-            {/* 입력창 */}
-            <div className="border-t p-4 bg-white fixed bottom-14 left-0 right-0">
+            {/* 입력창 (고정) */}
+            <div className="fixed bottom-16 left-0 right-0 bg-white p-4 border-t z-50">
                 <div className="flex gap-2">
                     <input
                         type="text"
@@ -69,10 +69,14 @@ export default function AcademyQA() {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && askLLM()}
-                        placeholder="질문을 입력하세요"
+                        placeholder="대치동 유치부 학원 추천해줘"
                     />
-                    <button onClick={askLLM} disabled={loading} className="bg-[#4B2EFF] text-white px-4 py-2 rounded">
-                        {loading ? '응답생성중...' : '전송'}
+                    <button
+                        onClick={askLLM}
+                        disabled={loading}
+                        className="bg-[#4B2EFF] text-white px-4 py-2 rounded disabled:opacity-50"
+                    >
+                        {loading ? '생성중...' : '전송'}
                     </button>
                 </div>
             </div>
