@@ -30,19 +30,20 @@ export default function RootLayout({ children }) {
             </head>
             <body className="antialiased bg-white text-black">
                 <Providers>
-                    <div className="flex flex-col min-h-screen pb-16">
+                    <div className="relative h-screen overflow-hidden">
                         {/* ✅ HeaderSearch 고정 */}
-                        <div className="fixed top-0 left-0 right-0 z-50">
+                        <div className="fixed top-0 left-0 right-0 z-50 bg-[#4B2EFF]">
                             <HeaderSearch />
                         </div>
 
                         {/* ✅ 가운데 main에 padding-top 추가 (헤더 높이만큼 여유 줘야 가리지 않음) */}
-                        <main className="flex-1 overflow-y-auto min-h-0 pt-16">{children}</main>
+                        {/* ✅ 가운데 스크롤 가능한 콘텐츠 */}
+                        <main className="pt-[60px] pb-[140px] h-full overflow-y-auto">{children}</main>
 
                         {/* ✅ 하단 탭바 고정 */}
                         <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white border-t py-2 text-sm text-gray-700 shadow">
                             {[
-                                { label: '학원상담', icon: 'ask', path: '/screen/ask' },
+                                { label: 'AI 교육상담', icon: 'ask', path: '/screen/ask' },
                                 { label: '홈', icon: 'home', path: '/' },
                                 { label: '분양', icon: 'event_note', path: '/분양' },
                                 { label: '관심', icon: 'favorite', path: '/screen/interest' },
