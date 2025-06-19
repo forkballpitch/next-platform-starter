@@ -14,14 +14,17 @@ export default function useChatHistory(sessionId = 'default') {
     }, [key]);
 
     const addToHistory = (role, content) => {
-        const updated = [...history, { role, content }];
-        setHistory(updated);
-        sessionStorage.setItem(key, JSON.stringify(updated));
+        setHistory((prevHistory) => {
+            const updated = [...prevHistory, { role, content }];
+            sessionStorage.setItem(key, JSON.stringify(updated));
+            return updated;
+        });
     };
 
-    // ✅ 대화 내역 초기화 함수 추가
+    // ✅ 대화 내역 초기화 함수 수정 (sessionStorage도 함께 초기화)
     const clearHistory = () => {
         setHistory([]);
+        sessionStorage.removeItem(key);
     };
 
     return { history, addToHistory, clearHistory };
