@@ -6,7 +6,7 @@ import useChatHistory from '../../hooks/useChatHistory';
 export default function AcademyQA() {
     const [query, setQuery] = useState('');
     const [loading, setLoading] = useState(false);
-    const { history, addToHistory } = useChatHistory('academy-qa');
+    const { history, addToHistory, clearHistory } = useChatHistory('academy-qa'); // ✅ clearHistory 추가
     const endRef = useRef(null);
 
     const askLLM = async () => {
@@ -40,8 +40,6 @@ export default function AcademyQA() {
 
     return (
         <div className="flex flex-col h-[calc(100vh-56px-64px)] relative">
-            {' '}
-            {/* 헤더+네비 높이 제외 */}
             {/* Q&A 영역 */}
             <div className="flex-1 overflow-y-auto px-4 pt-4 pb-36">
                 {history.length === 0 ? (
@@ -50,6 +48,7 @@ export default function AcademyQA() {
                     history.map((msg, idx) => (
                         <div
                             key={idx}
+                            ref={idx === history.length - 1 ? endRef : null} // ✅ 마지막 항목에 ref 연결
                             className={`mb-3 p-3 rounded border bg-gray-50 whitespace-pre-wrap ${
                                 msg.role === 'user' ? 'text-gray-700' : 'text-black'
                             }`}
@@ -58,11 +57,23 @@ export default function AcademyQA() {
                         </div>
                     ))
                 )}
-                <div ref={endRef} />
             </div>
+
             {/* 입력창 (고정) */}
             <div className="fixed bottom-16 left-0 right-0 bg-white p-4 border-t z-50">
                 <div className="flex gap-2">
+                    {/* 🔄 새 채팅 버튼 */}
+                    <button
+                        onClick={() => {
+                            clearHistory(); // ✅ 대화 기록 초기화
+                            setQuery(''); // ✅ 입력 필드 초기화
+                        }}
+                        className="material-symbols-outlined text-[#4B2EFF] text-2xl px-2"
+                        title="새 채팅"
+                    >
+                        refresh
+                    </button>
+
                     <input
                         type="text"
                         className="flex-1 p-2 border rounded"
@@ -71,6 +82,7 @@ export default function AcademyQA() {
                         onKeyDown={(e) => e.key === 'Enter' && askLLM()}
                         placeholder="대치동 유치부 학원 추천해줘"
                     />
+
                     <button
                         onClick={askLLM}
                         disabled={loading}

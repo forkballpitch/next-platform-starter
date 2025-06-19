@@ -19,5 +19,10 @@ export default function useChatHistory(sessionId = 'default') {
         sessionStorage.setItem(key, JSON.stringify(updated));
     };
 
-    return { history, addToHistory };
+    // ✅ 대화 내역 초기화 함수 추가
+    const clearHistory = () => {
+        setHistory([]);
+    };
+
+    return { history, addToHistory, clearHistory };
 }

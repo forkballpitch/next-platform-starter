@@ -5,20 +5,11 @@ import 학원DATA from '../../data/seoulAcademy.json';
 import { usePathname } from 'next/navigation';
 
 export default function HeaderSearch() {
+    const pathname = usePathname(); // ✅ Hook은 최상단에서 호출
     const { setKeyword, setApplyFilter } = useContext(SearchContext);
     const [localInput, setLocalInput] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const wrapperRef = useRef(null); // 👈 외부 클릭 감지용 ref
-
-    const pathname = usePathname();
-    const hideSearch = pathname === '/screen/ask';
-
-    // 🟣 /screen/ask 페이지에서는 검색창 대신 텍스트 헤더만 보여줌
-    if (pathname === '/screen/ask') {
-        return (
-            <header className="bg-[#4B2EFF] text-white px-4 py-3 text-lg font-semibold text-center">AI 학습상담</header>
-        );
-    }
 
     // 🔍 자동완성 필터링
     useEffect(() => {
@@ -43,6 +34,13 @@ export default function HeaderSearch() {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    // ✅ 조건부 렌더링은 useEffect 아래에서 처리
+    if (pathname === '/screen/ask') {
+        return (
+            <header className="bg-[#4B2EFF] text-white px-4 py-3 text-lg font-semibold text-center">AI 학습상담</header>
+        );
+    }
 
     return (
         <div ref={wrapperRef} className="relative z-50">
