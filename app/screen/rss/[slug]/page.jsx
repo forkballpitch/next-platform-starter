@@ -1,8 +1,9 @@
 'use client';
-
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function RssDetail({ params }) {
+    const router = useRouter();
     const slug = params.slug;
     const [item, setItem] = useState(null);
 
@@ -33,6 +34,21 @@ export default function RssDetail({ params }) {
 
     return (
         <div style={{ padding: '2rem' }}>
+            {/* ✅ 뒤로가기 버튼 */}
+            <button
+                onClick={() => router.push('/')}
+                style={{
+                    background: '#3498db',
+                    color: 'white',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '4px',
+                    marginBottom: '1rem',
+                    border: 'none',
+                    cursor: 'pointer'
+                }}
+            >
+                ← 목록으로 돌아가기
+            </button>
             <h2>{item.title}</h2>
             <div dangerouslySetInnerHTML={{ __html: item.content }} />
             <p style={{ marginTop: '2rem' }}>

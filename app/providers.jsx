@@ -1,7 +1,7 @@
 // app/providers.jsx
 'use client';
 import { useState } from 'react';
-import SearchContext from './components/SearchContext';
+import SearchContext from '../components/SearchContext';
 
 export default function Providers({ children }) {
     const [keyword, setKeyword] = useState('');
