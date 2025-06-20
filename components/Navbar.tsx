@@ -51,14 +51,13 @@ export default function Navbar() {
                 }
             )}
         >
-            <div className="grow basis-0 hidden font-semibold text-lg sm:text-xl text-rose-500 cursor-pointer sm:flex sm:gap-2">
+            <div className="grow basis-0 font-semibold text-lg sm:text-xl text-rose-500 cursor-pointer sm:flex sm:gap-2">
                 <MdMap className="text-4xl my-auto" />
                 <Link href="/" className="my-auto block">
                     Coding Note
                 </Link>
             </div>
 
-            <div>Coding Note</div>
             {/* {showFilter === false ? (
                 <div className="w-full sm:w-[280px] border py-1.5 border-gray-200 rounded-full shadow hover:shadow-lg cursor-pointer flex justify-between pl-6 pr-2">
                     <div
