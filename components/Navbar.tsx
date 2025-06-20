@@ -58,9 +58,7 @@ export default function Navbar() {
                 </Link>
             </div>
 
-            <div className="grow basis-0 hidden font-semibold text-lg sm:text-xl text-rose-500 cursor-pointer sm:flex sm:gap-2">
-                Coding Note
-            </div>
+            <div>Coding Note</div>
             {/* {showFilter === false ? (
                 <div className="w-full sm:w-[280px] border py-1.5 border-gray-200 rounded-full shadow hover:shadow-lg cursor-pointer flex justify-between pl-6 pr-2">
                     <div
