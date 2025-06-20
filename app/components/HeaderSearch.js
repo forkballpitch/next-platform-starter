@@ -36,9 +36,9 @@ export default function HeaderSearch() {
     }, []);
 
     // ✅ 조건부 렌더링은 useEffect 아래에서 처리
-    if (pathname === '/screen/ask') {
+    if (pathname === '/') {
         return (
-            <header className="bg-[#4B2EFF] text-white px-4 py-3 text-lg font-semibold text-center">AI 학습상담</header>
+            <header className="bg-[#4B2EFF] text-white px-4 py-3 text-lg font-semibold text-center">코딩학습</header>
         );
     }
 

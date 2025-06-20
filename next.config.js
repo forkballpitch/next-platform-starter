@@ -5,6 +5,10 @@ const nextConfig = {
             {
                 source: '/api/llm', // ✅ 프론트엔드에서 이 경로로 요청하면
                 destination: 'https://vtqjvgchmwcjwsrela2oyhlegu0hwqnw.lambda-url.us-west-2.on.aws/' // ✅ 이곳으로 프록시됨
+            },
+            {
+                source: '/api/rss',
+                destination: 'https://judynewyork.tistory.com/rss'
             }
         ];
     },

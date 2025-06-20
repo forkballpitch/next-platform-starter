@@ -1,12 +1,9 @@
-// import '../styles/globals.css';
-// import { Footer } from '../components/footer';
-import { Header } from '../components/header';
-import HeaderSearch from './components/HeaderSearch';
-import SearchContext from './components/SearchContext'; // ✅ 추가
-import Providers from './providers'; // ✅ Client 부분은 여기서 import
-import GoogleAd from './components/GoogleAd';
 import '../styles/globals.css';
-import Link from 'next/link'; // ✅ 추가
+import HeaderSearch from './components/HeaderSearch';
+import SearchContext from './components/SearchContext';
+import Providers from './providers';
+import GoogleAd from './components/GoogleAd';
+import Link from 'next/link';
 
 export const metadata = {
     title: {
@@ -30,21 +27,20 @@ export default function RootLayout({ children }) {
             </head>
             <body className="antialiased bg-white text-black">
                 <Providers>
-                    <div className="relative h-screen overflow-hidden">
-                        {/* ✅ HeaderSearch 고정 */}
+                    <div className="h-screen">
+                        {/* ✅ 헤더 - 상단 고정 */}
                         <div className="fixed top-0 left-0 right-0 z-50 bg-[#4B2EFF]">
                             <HeaderSearch />
                         </div>
 
-                        {/* ✅ 가운데 main에 padding-top 추가 (헤더 높이만큼 여유 줘야 가리지 않음) */}
-                        {/* ✅ 가운데 스크롤 가능한 콘텐츠 */}
-                        <main className="pt-[60px] pb-[140px] h-full overflow-y-auto">{children}</main>
+                        {/* ✅ 메인 콘텐츠 - 헤더와 네비 사이의 공간 */}
+                        <main className="h-full pt-[60px] pb-[60px] overflow-hidden">{children}</main>
 
-                        {/* ✅ 하단 탭바 고정 */}
+                        {/* ✅ 하단 네비게이션 - 하단 고정 */}
                         <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white border-t py-2 text-sm text-gray-700 shadow">
                             {[
-                                { label: 'AI 교육상담', icon: 'ask', path: '/screen/ask' },
                                 { label: '홈', icon: 'home', path: '/' },
+                                { label: 'AI 교육상담', icon: 'ask', path: '/screen/ask' },
                                 { label: '분양', icon: 'event_note', path: '/분양' },
                                 { label: '관심', icon: 'favorite', path: '/screen/interest' },
                                 { label: '전체', icon: 'menu', path: '/전체' }
