@@ -10,7 +10,7 @@ export default function NaverMapWrapper() {
     const naverKey = 'u7amr5n722';
 
     return (
-        <NavermapsProvider ncpKeyId={naverKey} error={<p>error</p>} loading={<p>Maps Loading</p>}>
+        <NavermapsProvider ncpKeyId={naverKey}>
             <div style={{ display: 'flex', width: '100dvw', height: '100dvh' }}>
                 <NaverMapsMarkerCluster />
             </div>
