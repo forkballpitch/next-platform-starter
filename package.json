@@ -10,6 +10,7 @@
         "postinstall": "patch-package"
     },
     "dependencies": {
+        "@heroicons/react": "^2.2.0",
         "@netlify/blobs": "^8.0.1",
         "axios": "^1.10.0",
         "blobshape": "^1.0.0",

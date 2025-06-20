@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import useChatHistory from '../../hooks/useChatHistory';
 
+// 상단에 추가
+import { PlusIcon, Cog6ToothIcon, MicrophoneIcon, ArrowUpIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+
 export default function AcademyQA() {
     const [query, setQuery] = useState('');
     const [loading, setLoading] = useState(false);
@@ -43,87 +46,88 @@ export default function AcademyQA() {
     }, [history]);
 
     return (
-        <div className="h-full flex flex-col">
+        <div className="flex flex-col h-full pb-14">
             {/* Q&A 영역 - 컨텐츠가 넘칠 때만 스크롤 */}
-            <div className="flex-1 min-h-0">
-                <div className="h-full overflow-y-auto px-4 pt-4 pb-4">
-                    {history.length === 0 ? (
-                        <div className="h-full flex items-start pt-8">
-                            <p className="text-gray-500">아직 질문이 없습니다.</p>
-                        </div>
-                    ) : (
-                        <>
-                            {(() => {
-                                const qaGroups = [];
-                                for (let i = 0; i < history.length; i += 2) {
-                                    const question = history[i];
-                                    const answer = history[i + 1];
-                                    if (question && question.role === 'user') {
-                                        qaGroups.push({ question, answer, index: i });
-                                    }
-                                }
+            <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-8 pb-4 bg-[#3c3f4a]">
+                {history.length === 0 ? (
+                    <p className="text-gray-500">Claude LLM 에게 질문하세요</p>
+                ) : (
+                    (() => {
+                        const qaGroups = [];
+                        for (let i = 0; i < history.length; i += 2) {
+                            const question = history[i];
+                            const answer = history[i + 1];
+                            if (question && question.role === 'user') {
+                                qaGroups.push({ question, answer, index: i });
+                            }
+                        }
 
-                                return qaGroups.map(({ question, answer, index }) => (
-                                    <div key={index} className="mb-4 p-4 rounded border bg-gray-50">
-                                        {/* 질문 */}
-                                        <div className="mb-3">
-                                            <span className="font-bold text-blue-600">Q:</span>
-                                            <span className="ml-2 text-blue-600 whitespace-pre-wrap">
-                                                {question.content}
-                                            </span>
-                                        </div>
+                        return qaGroups.map(({ question, answer, index }) => (
+                            <div key={index} className="mb-4 p-4 rounded border border-gray-300 bg-gray-200">
+                                {/* 질문 */}
+                                <div className="mb-3">
+                                    <span className="font-bold text-gray-800">Q:</span>
+                                    <span className="ml-2 text-gray-800 whitespace-pre-wrap">{question.content}</span>
+                                </div>
 
-                                        {/* 답변 - 최대 높이 설정하고 내부에서만 스크롤 */}
-                                        <div>
-                                            <span className="font-bold text-black">A:</span>
-                                            <div className="ml-2 text-black whitespace-pre-wrap max-h-60 overflow-y-auto">
-                                                {answer
-                                                    ? answer.content
-                                                    : loading && index === history.length - 1
-                                                    ? '답변을 생성중입니다...'
-                                                    : '답변 없음'}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ));
-                            })()}
-                            <div ref={endRef} />
-                        </>
-                    )}
-                </div>
+                                {/* 답변 */}
+                                <div className="bg-[#3f414d] rounded p-3 mt-2">
+                                    <span className="font-bold text-green-300">A:</span>
+                                    <span className="ml-2 text-white whitespace-pre-wrap">
+                                        {answer
+                                            ? answer.content
+                                            : loading && index === history.length - 1
+                                            ? '답변을 생성중입니다...'
+                                            : '답변 없음'}
+                                    </span>
+                                </div>
+                            </div>
+                        ));
+                    })()
+                )}
+
+                <div ref={endRef} />
             </div>
 
             {/* 입력창 - 하단 고정 (스크롤 안됨) */}
-            <div className="flex-shrink-0 bg-white p-4 border-t">
-                <div className="flex gap-2">
-                    {/* 🔄 새 채팅 버튼 */}
+
+            <div className="flex-shrink-0 bg-[#343541] px-4 py-3 border-t border-[#3f4045]">
+                <div className="flex items-center rounded-2xl bg-[#40414f] px-4 py-2 gap-3 text-white">
+                    {/* + 아이콘 (히스토리 초기화) */}
                     <button
                         onClick={() => {
                             clearHistory();
                             setQuery('');
                         }}
-                        className="material-symbols-outlined text-[#4B2EFF] text-2xl px-2"
+                        className="hover:text-gray-300"
                         title="새 채팅"
                     >
-                        refresh
+                        <PlusIcon className="w-5 h-5" />
                     </button>
 
+                    {/* 입력창 */}
                     <input
                         type="text"
-                        className="flex-1 p-2 border rounded"
+                        className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
+                        placeholder="대치동 유치부 학원 추천해줘"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && !loading && askLLM()}
-                        placeholder="대치동 유치부 학원 추천해줘"
-                        disabled={loading} // ✅ 로딩 중에는 입력 비활성화
+                        disabled={loading}
                     />
 
+                    {/* 전송 버튼 */}
                     <button
                         onClick={askLLM}
                         disabled={loading || !query.trim()}
-                        className="bg-[#4B2EFF] text-white px-4 py-2 rounded disabled:opacity-50"
+                        className="bg-white text-black rounded-full p-2 w-8 h-8 flex items-center justify-center disabled:opacity-50"
+                        title="전송"
                     >
-                        {loading ? '생성중...' : '전송'}
+                        {loading ? (
+                            <ArrowPathIcon className="w-4 h-4 animate-spin" />
+                        ) : (
+                            <ArrowUpIcon className="w-4 h-4" />
+                        )}
                     </button>
                 </div>
             </div>

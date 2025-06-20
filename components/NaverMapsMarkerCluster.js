@@ -2,7 +2,7 @@
 import { Container as MapDiv, NaverMap, useNavermaps, Overlay, useMap } from 'react-naver-maps';
 import { useState, useEffect, useContext, useRef } from 'react';
 import { makeMarkerClustering } from './marker-cluster';
-import 학원DATA from '../../data/seoulAcademy.json';
+import 학원DATA from '@/data/seoulAcademy.json';
 import { getCoordinates } from '../app/lib/getCoordinates';
 import SearchContext from './SearchContext';
 import { useRouter } from 'next/navigation'; // 맨 위에 추가
