@@ -1,7 +1,7 @@
 'use client';
 import { useContext, useState, useEffect, useRef } from 'react';
 import SearchContext from './SearchContext';
-import 학원DATA from '../../data/seoulAcademy.json';
+import 학원DATA from '@/data/seoulAcademy.json';
 import { usePathname } from 'next/navigation';
 
 export default function HeaderSearch() {
@@ -42,9 +42,15 @@ export default function HeaderSearch() {
         );
     }
 
+    // components/HeaderSearch.tsx
+
     return (
-        <div ref={wrapperRef} className="relative z-50">
-            <header className="bg-[#4B2EFF] text-white px-4 py-3 flex items-center space-x-3">
+        <div
+            ref={wrapperRef}
+            className="fixed top-0 left-0 right-0 z-50 bg-[#4B2EFF] text-white px-4 py-5"
+            style={{ maxWidth: '100%', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+        >
+            <header className="flex items-center space-x-3">
                 <span className="material-symbols-outlined text-2xl">home</span>
                 <div className="flex-1 relative">
                     <input
@@ -63,7 +69,7 @@ export default function HeaderSearch() {
                                         setLocalInput(name);
                                         setKeyword(name);
                                         setApplyFilter(true);
-                                        setSuggestions([]); // ✅ 드롭다운 닫기
+                                        setSuggestions([]);
                                     }}
                                 >
                                     {name}
@@ -76,7 +82,7 @@ export default function HeaderSearch() {
                     onClick={() => {
                         setKeyword(localInput);
                         setApplyFilter(true);
-                        setSuggestions([]); // ✅ 검색 시 닫기
+                        setSuggestions([]);
                     }}
                     className="bg-white text-[#4B2EFF] px-2 py-1 rounded"
                 >

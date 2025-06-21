@@ -58,7 +58,7 @@ export default function Navbar() {
                 </Link>
             </div>
 
-            {/* {showFilter === false ? (
+            {showFilter === false ? (
                 <div className="w-full sm:w-[280px] border py-1.5 border-gray-200 rounded-full shadow hover:shadow-lg cursor-pointer flex justify-between pl-6 pr-2">
                     <div
                         role="presentation"
@@ -248,7 +248,7 @@ export default function Navbar() {
                               ))}
                     </div>
                 )}
-            </div> */}
+            </div>
         </nav>
     );
 }

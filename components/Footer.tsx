@@ -42,6 +42,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 const TABS = [
     { label: '홈', path: '/' },
+    { label: '엄마할일', path: '/screen/momschedule' },
     { label: '학원지도', path: '/screen/academymap' },
     { label: '학습AI상담', path: '/screen/ask' },
     { label: '학원문의', path: '/screen/interest' }

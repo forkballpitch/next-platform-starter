@@ -18,11 +18,11 @@ function KakaoAdFitClient() {
         if (windowSize < 1024) {
             ins.setAttribute('data-ad-width', '320');
             ins.setAttribute('data-ad-height', '100');
-            ins.setAttribute('data-ad-unit', 'DAN-SQ7f3pLYgYFYqJaZ'); // ← 모바일용 광고 ID
+            ins.setAttribute('data-ad-unit', 'DAN-vVsrSbDLKoi7xYo6'); // ← 모바일용 광고 ID
         } else {
             ins.setAttribute('data-ad-width', '728');
             ins.setAttribute('data-ad-height', '90');
-            ins.setAttribute('data-ad-unit', 'DAN-SQ7f3pLYgYFYqJaZ'); // ← PC용 광고 ID
+            ins.setAttribute('data-ad-unit', 'DAN-vVsrSbDLKoi7xYo6'); // ← PC용 광고 ID
         }
 
         script.async = true;
