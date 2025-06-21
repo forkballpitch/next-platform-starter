@@ -2,7 +2,7 @@
 import { Container as MapDiv, NaverMap, useNavermaps, Overlay, useMap } from 'react-naver-maps';
 import { useState, useEffect, useContext, useRef } from 'react';
 import { makeMarkerClustering } from './marker-cluster';
-import 학원DATA from '@/data/seoulAcademy.json';
+import 학원DATA from '@/data/seoulAcademyWithCoords.json';
 import { getCoordinates } from '../app/lib/getCoordinates';
 import SearchContext from './SearchContext';
 import { useRouter } from 'next/navigation'; // 맨 위에 추가
@@ -42,12 +42,14 @@ function MarkerCluster() {
 
             for (const item of 학원DATA.DATA) {
                 const fullAddress = item.fa_rdnma;
+
+                // 주소 필터 (선택)
                 if (!fullAddress.startsWith('서울특별시 강남구')) continue;
 
-                const coord = await getCoordinates(fullAddress);
-                if (!coord) continue;
+                // 좌표가 없으면 무시
+                if (!item.latitude || !item.longitude) continue;
 
-                const latlng = new navermaps.LatLng(coord.latitude, coord.longitude);
+                const latlng = new navermaps.LatLng(item.latitude, item.longitude);
 
                 const marker = new navermaps.Marker({
                     position: latlng,
@@ -55,19 +57,19 @@ function MarkerCluster() {
                     map: map
                 });
 
-                const slug = encodeURIComponent(item.aca_nm); // 혹은 ID
+                const slug = encodeURIComponent(item.aca_nm);
 
                 const infoWindow = new navermaps.InfoWindow({
                     content: `
-                                <div style="padding:8px;font-size:12px;">
-                                🏫 ${item.aca_nm}
-                                <br/>
-                                <button onclick="window.dispatchEvent(new CustomEvent('marker-click', { detail: '${slug}' }))"
-                                        style="margin-top:4px;padding:4px 6px;border:none;background:#4B2EFF;color:white;border-radius:4px;cursor:pointer;">
-                                    ➡ 바로가기
-                                </button>
-                                </div>
-                            `,
+            <div style="padding:8px;font-size:12px;">
+            🏫 ${item.aca_nm}
+            <br/>
+            <button onclick="window.dispatchEvent(new CustomEvent('marker-click', { detail: '${slug}' }))"
+                    style="margin-top:4px;padding:4px 6px;border:none;background:#4B2EFF;color:white;border-radius:4px;cursor:pointer;">
+                ➡ 바로가기
+            </button>
+            </div>
+        `,
                     backgroundColor: '#fff',
                     borderColor: '#333',
                     borderWidth: 1,
@@ -76,14 +78,11 @@ function MarkerCluster() {
                 });
 
                 navermaps.Event.addListener(marker, 'click', () => {
-                    if (currentInfoWindowRef.current) {
-                        currentInfoWindowRef.current.close(); // ✅ 이전 말풍선 닫기
-                    }
-                    infoWindow.open(map, marker); // ✅ 새 말풍선 열기
-                    currentInfoWindowRef.current = infoWindow; // ✅ 현재 참조 갱신
+                    if (currentInfoWindowRef.current) currentInfoWindowRef.current.close();
+                    infoWindow.open(map, marker);
+                    currentInfoWindowRef.current = infoWindow;
                 });
 
-                // ✅ 지도 클릭 시 말풍선 닫기 이벤트 추가
                 navermaps.Event.addListener(map, 'click', () => {
                     if (currentInfoWindowRef.current) {
                         currentInfoWindowRef.current.close();
