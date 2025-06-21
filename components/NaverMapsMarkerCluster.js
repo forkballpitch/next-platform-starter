@@ -174,7 +174,8 @@ function NaverMapsMarkerCluster() {
         <MapDiv
             style={{
                 width: '100%',
-                height: '100%'
+                height: '100%',
+                marginTop: '15px'
             }}
         >
             <NaverMap
