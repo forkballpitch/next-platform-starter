@@ -5,8 +5,8 @@ export async function GET(req) {
 
     const res = await fetch(`https://maps.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(query)}`, {
         headers: {
-            'X-NCP-APIGW-API-KEY-ID': process.env.NAVER_CLIENT_ID,
-            'X-NCP-APIGW-API-KEY': process.env.NAVER_CLIENT_SECRET
+            'X-NCP-APIGW-API-KEY-ID': 'batn8474jt', //process.env.NAVER_CLIENT_ID,
+            'X-NCP-APIGW-API-KEY': 'QLoR1GARl50zrQN3d9rPRfEiS1wG9LtBiaGWAAG4' //process.env.NAVER_CLIENT_SECRET
         }
     });
 
