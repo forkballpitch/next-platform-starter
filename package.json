@@ -20,6 +20,7 @@
         "fast-xml-parser": "^4.5.0",
         "firebase": "^11.9.1",
         "fs": "^0.0.1-security",
+        "lucide-react": "^0.519.0",
         "markdown-to-jsx": "^7.4.5",
         "mongodb": "^6.12.0",
         "next": "14.2.13",

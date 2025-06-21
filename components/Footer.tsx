@@ -35,17 +35,17 @@
 //         </footer>
 //     );
 // }
-
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
+import { Home, CalendarCheck, MapPin, Bot, Mail } from 'lucide-react'; // lucide 아이콘 import
 
 const TABS = [
-    { label: '홈', path: '/' },
-    { label: '엄마할일', path: '/screen/momschedule' },
-    { label: '학원지도', path: '/screen/academymap' },
-    { label: '학습AI상담', path: '/screen/ask' },
-    { label: '학원문의', path: '/screen/interest' }
+    { label: '홈', path: '/', icon: <Home size={20} /> },
+    { label: '엄마할일', path: '/screen/momschedule', icon: <CalendarCheck size={20} /> },
+    { label: '학원지도', path: '/screen/academymap', icon: <MapPin size={20} /> },
+    { label: '학습AI상담', path: '/screen/ask', icon: <Bot size={20} /> },
+    { label: '학원문의', path: '/screen/interest', icon: <Mail size={20} /> }
 ];
 
 export default function Footer() {
@@ -54,18 +54,20 @@ export default function Footer() {
 
     return (
         <footer className="bg-white border-t border-gray-200 fixed bottom-0 w-full z-50">
-            <nav className="flex justify-around items-center h-14">
+            <nav className="flex justify-around items-center h-16">
                 {TABS.map((tab) => {
                     const isActive = pathname === tab.path;
                     return (
                         <button
                             key={tab.path}
                             onClick={() => router.push(tab.path)}
-                            className={`text-sm font-medium transition-colors duration-200 ${
+                            className={`w-full h-full flex flex-col items-center justify-center text-xs transition-colors duration-200 ${
                                 isActive ? 'text-orange-500' : 'text-gray-500 hover:text-orange-400'
                             }`}
+                            style={{ flex: 1 }}
                         >
-                            {tab.label}
+                            {tab.icon}
+                            <span>{tab.label}</span>
                         </button>
                     );
                 })}
