@@ -9,7 +9,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { Toaster } from 'react-hot-toast';
 import { SessionProvider } from 'next-auth/react';
 import GoogleAnalytics from './googleAnalytics';
-
+import KakaoAd from '@/components/KakaoAdFitClient';
 interface Props {
     children?: React.ReactNode;
 }
@@ -36,6 +36,7 @@ export const NextLayout = ({ children }: Props) => {
         <div className="flex flex-col h-full">
             <div className="shrink-0">
                 <Navbar />
+                <KakaoAd />
             </div>
             <main className="flex-1 overflow-y-auto">{children}</main>
             <div className="shrink-0">

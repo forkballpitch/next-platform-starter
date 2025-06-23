@@ -38,7 +38,12 @@ function KakaoAdFitClient() {
         adRef.current = true;
     }, []);
 
-    return <aside className="aside__kakaoAdFit" style={{ marginTop: '6em', marginBottom: '3em' }} />;
+    return (
+        <aside
+            className="aside__kakaoAdFit"
+            style={{ marginTop: '5em', marginBottom: '2em', border: '1px solid rgb(232 232 232)', padding: '20px' }}
+        />
+    );
 }
 
 export default React.memo(KakaoAdFitClient);
