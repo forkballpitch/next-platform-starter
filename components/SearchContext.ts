@@ -4,9 +4,9 @@ import { createContext } from 'react';
 
 const SearchContext = createContext({
     keyword: '',
-    setKeyword: () => {},
+    setKeyword: (k: string) => {},
     applyFilter: false,
-    setApplyFilter: () => {}
+    setApplyFilter: (v: boolean) => {} // ✅ boolean 인자 받도록 명시
 });
 
 export default SearchContext;
