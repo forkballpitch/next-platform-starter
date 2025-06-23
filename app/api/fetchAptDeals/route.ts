@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { XMLParser } from 'fast-xml-parser';
 
 export async function GET() {
-    const serviceKey = process.env.APT_API_KEY;
+    const serviceKey = 'uPBe0WsM2NosSYcm0xFIdYOynTpXBeDm1fcH5ZYOevJT9MnKAdEZlooImBdPPb7dDNXLag903rfo4J2Cxw7v8w=='; //process.env.APT_API_KEY;
     const url = `https://apis.data.go.kr/1613000/RTMSDataSvcAptTrade/getRTMSDataSvcAptTrade?serviceKey=${serviceKey}&LAWD_CD=11110&DEAL_YMD=202505`;
 
     const response = await fetch(url);
