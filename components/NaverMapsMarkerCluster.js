@@ -40,45 +40,61 @@ function MarkerCluster() {
             const MarkerClustering = makeMarkerClustering(window.naver);
             const markers = [];
 
+            // 좌표 → 해당 좌표의 학원 리스트를 보관
+            const coordToInfoWindowMap = new Map();
+
             for (const item of 학원DATA.DATA) {
                 const fullAddress = item.fa_rdnma;
-
-                // 주소 필터 (선택)
                 if (!fullAddress.startsWith('서울특별시 강남구')) continue;
-
-                // 좌표가 없으면 무시
                 if (!item.latitude || !item.longitude) continue;
 
                 const latlng = new navermaps.LatLng(item.latitude, item.longitude);
-
                 const marker = new navermaps.Marker({
                     position: latlng,
                     title: item.aca_nm,
                     map: map
                 });
 
+                const coordKey = `${item.latitude},${item.longitude}`;
                 const slug = encodeURIComponent(item.aca_nm);
 
-                const infoWindow = new navermaps.InfoWindow({
-                    content: `
-            <div style="padding:8px;font-size:12px;">
-            🏫 ${item.aca_nm}
-            <br/>
-            <button onclick="window.dispatchEvent(new CustomEvent('marker-click', { detail: '${slug}' }))"
-                    style="margin-top:4px;padding:4px 6px;border:none;background:#4B2EFF;color:white;border-radius:4px;cursor:pointer;">
-                ➡ 바로가기
-            </button>
-            </div>
-        `,
-                    backgroundColor: '#fff',
-                    borderColor: '#333',
-                    borderWidth: 1,
-                    anchorSize: new navermaps.Size(10, 10),
-                    anchorSkew: true
+                // 해당 좌표에 학원 목록 누적
+                if (!coordToInfoWindowMap.has(coordKey)) {
+                    coordToInfoWindowMap.set(coordKey, []);
+                }
+                coordToInfoWindowMap.get(coordKey).push({
+                    name: item.aca_nm,
+                    slug
                 });
 
+                // 클릭 이벤트
                 navermaps.Event.addListener(marker, 'click', () => {
                     if (currentInfoWindowRef.current) currentInfoWindowRef.current.close();
+
+                    // 해당 좌표 학원 리스트 구성
+                    const items = coordToInfoWindowMap
+                        .get(coordKey)
+                        .map(
+                            ({ name, slug }) => `
+        <div style="margin-bottom:6px;">
+            🏫 ${name}<br/>
+            <button onclick="window.dispatchEvent(new CustomEvent('marker-click', { detail: '${slug}' }))"
+                style="margin-top:4px;padding:4px 6px;border:none;background:#4B2EFF;color:white;border-radius:4px;cursor:pointer;">
+                ➡ 바로가기
+            </button>
+        </div>
+    `
+                        )
+                        .join('<hr style="margin:6px 0;" />');
+
+                    const infoWindow = new navermaps.InfoWindow({
+                        content: `
+        <div style="padding:8px;font-size:12px;max-width:220px;max-height:160px;overflow-y:auto;">
+            ${items}
+        </div>
+    `
+                    });
+
                     infoWindow.open(map, marker);
                     currentInfoWindowRef.current = infoWindow;
                 });
@@ -90,6 +106,7 @@ function MarkerCluster() {
                     }
                 });
 
+                // 마커는 무조건 모두 넣기 (중복 좌표라도)
                 markers.push({ marker, name: item.aca_nm });
             }
 

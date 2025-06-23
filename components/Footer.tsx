@@ -42,10 +42,11 @@ import { Home, CalendarCheck, MapPin, Bot, Mail } from 'lucide-react'; // lucide
 
 const TABS = [
     { label: '홈', path: '/', icon: <Home size={20} /> },
-    { label: '엄마할일', path: '/screen/momschedule', icon: <CalendarCheck size={20} /> },
+    // { label: '엄마할일', path: '/screen/momschedule', icon: <CalendarCheck size={20} /> },
     { label: '학원지도', path: '/screen/academymap', icon: <MapPin size={20} /> },
     { label: '학습AI상담', path: '/screen/ask', icon: <Bot size={20} /> },
     { label: '학원문의', path: '/screen/interest', icon: <Mail size={20} /> }
+    // { label: '실거래', path: '/screen/apt', icon: <Mail size={20} /> }
 ];
 
 export default function Footer() {

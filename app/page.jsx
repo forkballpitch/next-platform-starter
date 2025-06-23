@@ -59,7 +59,7 @@ export default function RssList() {
 
     return (
         <div style={{ padding: '2rem' }}>
-            <h2>📰 BackEnd</h2>
+            <h2>📰 코딩학습(Backend)</h2>
 
             {loading ? (
                 <div style={{ textAlign: 'center', padding: '2rem' }}>

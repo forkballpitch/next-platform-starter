@@ -51,11 +51,11 @@ export default function Navbar() {
                 }
             )}
         >
-            <div className="grow basis-0 font-semibold text-lg sm:text-xl text-rose-500 cursor-pointer sm:flex sm:gap-2">
-                <MdMap className="text-4xl my-auto" />
-                <Link href="/" className="my-auto block">
-                    아이공부관리
-                </Link>
+            <div className="grow basis-0 font-semibold text-lg sm:text-xl text-orange-500 cursor-pointer sm:flex sm:gap-2">
+                <MdMap className="text-4xl my-auto text-orange-500" />
+                {/* <Link href="/" className="my-auto block">
+                    아이공부
+                </Link> */}
             </div>
 
             {/* {showFilter === false ? (
@@ -186,7 +186,7 @@ export default function Navbar() {
             )} */}
 
             <div className="grow basis-0 flex gap-4 align-middle justify-end relative">
-                {status === 'authenticated' ? (
+                {/* {status === 'authenticated' ? (
                     <Link
                         href={FormUrl.CATEGORY}
                         className="font-semibold text-sm my-auto px-4 py-3 rounded-full hover:bg-gray-50"
@@ -200,7 +200,7 @@ export default function Navbar() {
                     >
                         로그인 후 사용해주세요
                     </Link>
-                )}
+                )} */}
 
                 <button
                     id="menu-btn"

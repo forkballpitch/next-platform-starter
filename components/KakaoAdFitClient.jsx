@@ -12,7 +12,7 @@ function KakaoAdFitClient() {
         const script = document.createElement('script');
 
         ins.className = 'kakao_ad_area';
-        ins.style.display = 'none';
+        ins.style.display = 'block';
 
         const windowSize = window.innerWidth;
         if (windowSize < 1024) {
@@ -38,7 +38,7 @@ function KakaoAdFitClient() {
         adRef.current = true;
     }, []);
 
-    return <aside className="aside__kakaoAdFit" />;
+    return <aside className="aside__kakaoAdFit" style={{ marginTop: '6em' }} />;
 }
 
 export default React.memo(KakaoAdFitClient);

@@ -109,7 +109,7 @@ export default function AcademyQA() {
                     <input
                         type="text"
                         className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
-                        placeholder="대치동 유치부 학원 추천해줘"
+                        placeholder="대치동 아이 코딩학원 추천해줘"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && !loading && askLLM()}

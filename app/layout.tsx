@@ -35,12 +35,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="ko">
             <body className={`${noto_sans.className} h-screen flex flex-col overflow-hidden`}>
+                <KakaoAd />
                 <NextProvider>
                     <NextLayout>{children}</NextLayout>
                 </NextProvider>
                 {/* 광고 */}
                 <GoogleAd />
-                <KakaoAd />
             </body>
         </html>
     );

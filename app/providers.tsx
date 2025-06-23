@@ -37,7 +37,7 @@ export const NextLayout = ({ children }: Props) => {
             <div className="shrink-0">
                 <Navbar />
             </div>
-            <main className="flex-1 overflow-y-auto pt-16">{children}</main>
+            <main className="flex-1 overflow-y-auto">{children}</main>
             <div className="shrink-0">
                 <Footer />
             </div>
