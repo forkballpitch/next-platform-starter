@@ -6,9 +6,9 @@ const options = {};
 let client;
 let clientPromise: Promise<MongoClient>;
 
-if (!process.env.MONGODB_URI) {
-    throw new Error('MONGODB_URI 환경 변수가 설정되어 있지 않습니다.');
-}
+// if (!process.env.MONGODB_URI) {
+//     throw new Error('MONGODB_URI 환경 변수가 설정되어 있지 않습니다.');
+// }
 
 if (process.env.NODE_ENV === 'development') {
     if (!(global as any)._mongoClientPromise) {
