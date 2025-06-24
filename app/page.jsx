@@ -58,7 +58,7 @@ export default function RssList() {
     }, []);
 
     return (
-        <div style={{ padding: '2rem' }}>
+        <div style={{ padding: '1rem' }}>
             <h2>📰 코딩학습(Backend)</h2>
 
             {loading ? (
