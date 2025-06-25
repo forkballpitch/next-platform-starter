@@ -8,7 +8,7 @@ export default function GoogleAd() {
         if (!existingScript) {
             const script = document.createElement('script');
             script.src =
-                'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8042920644832260';
+                'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3543954618628961';
             script.async = true;
             script.crossOrigin = 'anonymous';
             document.head.appendChild(script);
@@ -25,7 +25,7 @@ export default function GoogleAd() {
         <ins
             className="adsbygoogle"
             style={{ display: 'block', textAlign: 'center' }}
-            data-ad-client="ca-pub-8042920644832260"
+            data-ad-client="ca-pub-3543954618628961"
             data-ad-format="auto"
             data-full-width-responsive="true"
         ></ins>
