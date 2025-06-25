@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { noto_sans } from './fonts';
 import './globals.css';
 import { NextLayout, NextProvider } from './providers';
-import GoogleAd from '@/components/GoogleAd';
 
 export const metadata: Metadata = {
     metadataBase: new URL('https://fastcampus-nextbnb.vercel.app'),
@@ -37,9 +36,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <NextProvider>
                     <NextLayout>{children}</NextLayout>
                 </NextProvider>
-
-                {/* 광고 */}
-                <GoogleAd />
             </body>
         </html>
     );

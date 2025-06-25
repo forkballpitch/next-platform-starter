@@ -41,7 +41,7 @@ function KakaoAdFitClient() {
     return (
         <aside
             className="aside__kakaoAdFit"
-            style={{ marginTop: '5em', marginBottom: '2em', border: '1px solid rgb(232 232 232)', padding: '20px' }}
+            style={{ marginTop: '5em', border: '1px solid rgb(232 232 232)', padding: '20px' }}
         />
     );
 }

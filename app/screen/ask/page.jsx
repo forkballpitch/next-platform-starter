@@ -46,7 +46,7 @@ export default function AcademyQA() {
     }, [history]);
 
     return (
-        <div className="flex flex-col h-full pb-14">
+        <div className="flex flex-col h-full" style={{ paddingBottom: '64px' }}>
             {/* Q&A 영역 - 컨텐츠가 넘칠 때만 스크롤 */}
             <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-8 pb-4 bg-[#3c3f4a]">
                 {history.length === 0 ? (
@@ -109,7 +109,7 @@ export default function AcademyQA() {
                     <input
                         type="text"
                         className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
-                        placeholder="대치동 아이 코딩학원 추천해줘"
+                        placeholder="대치동 코딩학원 추천해줘"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && !loading && askLLM()}

@@ -2,7 +2,7 @@
 
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
-
+import GoogleAd from '@/components/GoogleAd';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -37,6 +37,9 @@ export const NextLayout = ({ children }: Props) => {
             <div className="shrink-0">
                 <Navbar />
                 <KakaoAd />
+
+                {/* 광고 */}
+                {/* <GoogleAd /> */}
             </div>
             <main className="flex-1 overflow-y-auto">{children}</main>
             <div className="shrink-0">

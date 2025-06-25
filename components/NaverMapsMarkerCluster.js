@@ -18,7 +18,90 @@ function MarkerCluster() {
     const [hasRun, setHasRun] = useState(false);
     const clusterRef = useRef(null);
 
+    const { targetCoord, setTargetCoord } = useContext(SearchContext);
+
     const currentInfoWindowRef = useRef(null); // ⬅️ 마커 말풍선 추적용
+    // ✅ 여기 위치에 getDistance 함수 선언!
+    const HANTI_LAT = 37.498095;
+    const HANTI_LNG = 127.051572;
+
+    function getDistance(lat1, lng1, lat2, lng2) {
+        const R = 6371e3; // Earth radius in meters
+        const φ1 = (lat1 * Math.PI) / 180;
+        const φ2 = (lat2 * Math.PI) / 180;
+        const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+        const Δλ = ((lng2 - lng1) * Math.PI) / 180;
+
+        const a = Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c; // in meters
+    }
+
+    useEffect(() => {
+        if (targetCoord && map) {
+            const pos = new navermaps.LatLng(targetCoord.latitude, targetCoord.longitude);
+
+            // 동일 좌표의 학원 목록 가져오기
+            const coordKey = `${targetCoord.latitude},${targetCoord.longitude}`;
+            const matchedAcademies = 학원DATA.DATA.filter((item) => `${item.latitude},${item.longitude}` === coordKey);
+
+            const marker = new navermaps.Marker({ position: pos, map });
+
+            // InfoWindow 내용 구성
+            const content =
+                matchedAcademies.length > 0
+                    ? matchedAcademies
+                          .map(
+                              (item) => `
+                <div style="margin-bottom:6px;">
+                    🏫 ${item.aca_nm}<br/>
+                    <button onclick="window.dispatchEvent(new CustomEvent('marker-click', { detail: '${encodeURIComponent(
+                        item.aca_nm
+                    )}' }))"
+                        style="margin-top:4px;padding:4px 6px;border:none;background:#4B2EFF;color:white;border-radius:4px;cursor:pointer;">
+                        ➡ 바로가기
+                    </button>
+                </div>
+            `
+                          )
+                          .join('<hr style="margin:6px 0;" />')
+                    : `<div>📍 검색된 위치입니다</div>`;
+
+            //학원 리스트 스크롤
+            const infoWindow = new navermaps.InfoWindow({
+                content: `
+                        <div style="padding:8px;font-size:12px;max-width:220px;max-height:160px;overflow-y:auto;">
+                        <style>
+                            div::-webkit-scrollbar {
+                            width: 6px;
+                            }
+                            div::-webkit-scrollbar-thumb {
+                            background-color: #888;
+                            border-radius: 4px;
+                            }
+                            div::-webkit-scrollbar-track {
+                            background-color: #f0f0f0;
+                            }
+                        </style>
+                        ${content}
+                        </div>
+                    `
+            });
+
+            navermaps.Event.addListener(marker, 'click', () => {
+                if (currentInfoWindowRef.current) currentInfoWindowRef.current.close();
+                infoWindow.open(map, marker);
+                currentInfoWindowRef.current = infoWindow;
+            });
+
+            infoWindow.open(map, marker); // ✅ 자동으로 열리게
+
+            map.setZoom(17);
+            map.panTo(pos);
+            setTargetCoord(null); // 한 번만 실행
+        }
+    }, [targetCoord, map]);
 
     useEffect(() => {
         const handleMarkerClick = (e) => {
@@ -32,9 +115,15 @@ function MarkerCluster() {
         };
     }, []);
 
-    // ✅ 마커 최초 생성
+    // ✅ 마커 최초 생성 (처음 화면 로딩시)
     useEffect(() => {
         if (!map || !window.naver || hasRun) return;
+
+        navermaps.Event.addListener(map, 'dragend', () => {
+            const center = map.getCenter();
+            console.log(center);
+            // renderAcademyMarkers(center.lat(), center.lng());
+        });
 
         async function setup() {
             const MarkerClustering = makeMarkerClustering(window.naver);
@@ -43,10 +132,23 @@ function MarkerCluster() {
             // 좌표 → 해당 좌표의 학원 리스트를 보관
             const coordToInfoWindowMap = new Map();
 
+            // 🔍 학원 데이터에서 가까운 것만 필터링
+            const sortedAcademies = 학원DATA.DATA.filter((item) => item.latitude && item.longitude)
+                .map((item) => {
+                    const distance = getDistance(HANTI_LAT, HANTI_LNG, item.latitude, item.longitude);
+                    return { ...item, distance };
+                })
+                .sort((a, b) => a.distance - b.distance)
+                .slice(0, 100);
+
+            // for (const item of sortedAcademies) {
             for (const item of 학원DATA.DATA) {
                 const fullAddress = item.fa_rdnma;
                 if (!fullAddress.startsWith('서울특별시 강남구')) continue;
                 if (!item.latitude || !item.longitude) continue;
+
+                const distance = getDistance(HANTI_LAT, HANTI_LNG, item.latitude, item.longitude);
+                if (distance > 1000) continue; // ✅ 반경 1km 이상은 제외
 
                 const latlng = new navermaps.LatLng(item.latitude, item.longitude);
                 const marker = new navermaps.Marker({
@@ -191,13 +293,12 @@ function NaverMapsMarkerCluster() {
         <MapDiv
             style={{
                 width: '100%',
-                height: '100%',
-                marginTop: '15px'
+                height: '100%'
             }}
         >
             <NaverMap
-                zoom={15}
-                center={new navermaps.LatLng(37.494719, 127.063198)}
+                zoom={16}
+                center={new navermaps.LatLng(37.498095, 127.051572)} // ✅ 한티역 좌표
                 zoomControl={true}
                 zoomControlOptions={{
                     position: navermaps.Position.TOP_LEFT,
