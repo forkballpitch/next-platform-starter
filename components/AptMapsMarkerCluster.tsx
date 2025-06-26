@@ -7,6 +7,12 @@ import SearchContext from './SearchContext';
 import { useRouter } from 'next/navigation';
 import { getCoordinates } from '../app/lib/getCoordinates';
 
+declare global {
+    interface Window {
+        naver: any;
+    }
+}
+
 interface AptDeal {
     apt: string;
     date: string;
@@ -103,7 +109,7 @@ function MarkerCluster() {
 
 function NaverMapsMarkerCluster() {
     const navermaps = useNavermaps();
-    const [center, setCenter] = useState<navermaps.LatLng | null>(null);
+    const [center, setCenter] = useState<any>(null);
 
     useEffect(() => {
         if (typeof window !== 'undefined' && navigator.geolocation) {
