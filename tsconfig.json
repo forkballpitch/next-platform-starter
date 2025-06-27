@@ -29,7 +29,10 @@
         "**/*.ts",
         "**/*.tsx",
         "app/api/momTodo/route.js",
-        "app/api/momTodo/route.js"
+        "app/api/momTodo/route.js",
+        "components/academy/NaverMapsMarkerCluster.js",
+        "components/AptMapsMarkerCluster.js",
+        "components/AptMapsMarkerCluster.js"
     ],
     "exclude": ["node_modules"]
 }

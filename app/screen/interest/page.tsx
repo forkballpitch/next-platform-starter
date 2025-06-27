@@ -83,7 +83,7 @@ export default function SalePage() {
 
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow space-y-6">
-            <h1 className="text-xl font-bold text-gray-800">📋 학원문의를 남겨주세요</h1>
+            <h1 className="text-xl font-bold text-gray-800">📋 학원문의를 남겨주세요</h1>
 
             {/* 할 일 목록 */}
             <ul className="space-y-2">
