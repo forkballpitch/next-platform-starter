@@ -61,7 +61,7 @@ function MarkerCluster() {
 
             // 동일 좌표의 학원 목록 가져오기
             const coordKey = `${targetCoord.latitude},${targetCoord.longitude}`;
-            const matchedAcademies = 학원DATA.DATA.filter((item) => `${item.latitude},${item.longitude}` === coordKey);
+            const matchedAcademies = 학원DATA.filter((item) => `${item.latitude},${item.longitude}` === coordKey);
 
             const marker = new navermaps.Marker({ position: pos, map });
 
@@ -150,7 +150,8 @@ function MarkerCluster() {
             const coordToInfoWindowMap = new Map();
 
             // 🔍 학원 데이터에서 가까운 것만 필터링
-            const sortedAcademies = 학원DATA.DATA.filter((item) => item.latitude && item.longitude)
+            const sortedAcademies = 학원DATA
+                .filter((item) => item.latitude && item.longitude)
                 .map((item) => {
                     const distance = getDistance(HANTI_LAT, HANTI_LNG, item.latitude, item.longitude);
                     return { ...item, distance };

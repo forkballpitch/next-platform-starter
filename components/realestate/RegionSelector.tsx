@@ -33,7 +33,9 @@ export default function RegionSelector() {
             const rows = json?.StanReginCd?.[1]?.row ?? [];
             setDongList(rows);
 
-            const gus = Array.from(new Set(rows.map((r: DongData) => r.locatadd_nm.split(' ')[1]).filter(Boolean)));
+            const gus = Array.from(
+                new Set(rows.map((r: DongData) => r.locatadd_nm.split(' ')[1]).filter(Boolean))
+            ) as string[];
             setGuList(gus);
         }
 

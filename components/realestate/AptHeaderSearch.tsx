@@ -2,11 +2,12 @@
 
 import { useContext, useState, useEffect, useRef } from 'react';
 import SearchContext from '../academy/SearchContext';
-import 학원DATA from '@/data/academy/seoulAcademyWithCoords.json';
+import academyData from '@/data/academy/seoulAcademyWithCoords.json';
 import { usePathname, useRouter } from 'next/navigation';
 import { Home, Search } from 'lucide-react';
 import { getCoordinates } from '@/app/lib/getCoordinates';
 import { fetchPlaceByName } from '@/app/lib/fetchPlaceByName';
+const data = academyData as Array<{ ACA_NM: string; [key: string]: any }>;
 
 export default function HeaderSearch() {
     const pathname = usePathname();
@@ -20,9 +21,7 @@ export default function HeaderSearch() {
 
     useEffect(() => {
         if (localInput.trim()) {
-            const filtered = 학원DATA.DATA.filter((item) => item.aca_nm.includes(localInput)).map(
-                (item) => item.aca_nm
-            );
+            const filtered = data.filter((item) => item.aca_nm.includes(localInput)).map((item) => item.aca_nm);
             setSuggestions(filtered.slice(0, 5));
         } else {
             setSuggestions([]);
@@ -66,7 +65,7 @@ export default function HeaderSearch() {
         if (!trimmed) return;
 
         // 1️⃣ 학원 데이터에서 정확히 일치하는 이름 찾기
-        const matched = 학원DATA.DATA.find((item) => item.aca_nm === trimmed);
+        const matched = data.find((item) => item.aca_nm === trimmed);
 
         if (matched) {
             console.log('🎯 학원명 일치:', matched.aca_nm);
@@ -145,7 +144,7 @@ export default function HeaderSearch() {
                                         setApplyFilter(true);
                                         setSuggestions([]);
 
-                                        const matched = 학원DATA.DATA.find((item) => item.aca_nm === name);
+                                        const matched = data.find((item) => item.aca_nm === name);
                                         if (matched) {
                                             setTargetCoord({
                                                 latitude: matched.latitude,
