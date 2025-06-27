@@ -1,5 +1,4 @@
 'use client';
-
 import { useContext, useState, useEffect, useRef } from 'react';
 import SearchContext from '../academy/SearchContext';
 import academyData from '@/data/academy/seoulAcademyWithCoords.json';
