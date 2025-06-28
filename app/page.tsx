@@ -372,7 +372,7 @@ export default function WordGuessPage() {
         setCurrentWordIndex(0);
     };
     return (
-        <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow space-y-4 text-center relative overflow-hidden">
+        <div className="max-w-md mx-auto p-6 bg-white rounded shadow space-y-4 text-center relative overflow-hidden">
             <h1 className="text-xl font-bold text-gray-800">📝 Word Guess Game</h1>
 
             {/* 유닛 선택 버튼 */}
