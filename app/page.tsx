@@ -317,6 +317,10 @@ export default function WordGuessPage() {
     };
 
     useEffect(() => {
+        setClickedLetters([]);
+    }, [currentWordIndex, selectedUnitIndex]);
+
+    useEffect(() => {
         setShuffledLetters(shuffleArray(answerArray));
         handleReset();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -330,7 +334,7 @@ export default function WordGuessPage() {
         if (answerArray[nextIndex] === letter) {
             const updated = [...currentGuess, letter];
             setCurrentGuess(updated);
-
+            setClickedLetters((prev) => [...prev, letter]);
             setShowYoshi(true);
             setTimeout(() => setShowYoshi(false), 1000);
 
@@ -338,10 +342,14 @@ export default function WordGuessPage() {
                 setCompleted(true);
             }
         } else {
+            // 틀린 글자 빨간색 표시
+            setWrongLetter(letter);
             setShakeIndex(idx);
             setShowKoopa(true);
+
             setTimeout(() => setShowKoopa(false), 1000);
             setTimeout(() => setShakeIndex(null), 300);
+            setTimeout(() => setWrongLetter(null), 500); // 0.5초 뒤 원복
         }
     };
 
@@ -371,6 +379,9 @@ export default function WordGuessPage() {
         setSelectedUnitIndex(index);
         setCurrentWordIndex(0);
     };
+
+    const [clickedLetters, setClickedLetters] = useState<string[]>([]);
+    const [wrongLetter, setWrongLetter] = useState<string | null>(null);
     return (
         <div className="max-w-md mx-auto p-6 bg-white rounded shadow space-y-4 text-center relative overflow-hidden">
             <h1 className="text-xl font-bold text-gray-800">📝 Word Guess Game</h1>
@@ -422,27 +433,42 @@ export default function WordGuessPage() {
             {/* 단어 뜻 */}
             <p className="text-gray-600 italic mt-2">{currentWordObject.meaning || '(No meaning yet)'}</p>
 
-            {/* 정답 칸 */}
-            <div className="flex justify-center space-x-1 mt-2">
-                {answerArray.map((letter, index) => (
-                    <span key={index} className="w-6 h-8 border-b-2 border-gray-400 text-center text-lg">
-                        {showHint ? letter : currentGuess[index] || ''}
-                    </span>
-                ))}
+            {/* 화살표 */}
+            <div className="flex justify-between mt-4">
+                <button onClick={handlePrevWord} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
+                    ←
+                </button>
+                {/* 정답 칸 */}
+                <div className="flex justify-center space-x-1 mt-2">
+                    {answerArray.map((letter, index) => (
+                        <span key={index} className="w-6 h-8 border-b-2 border-gray-400 text-center text-lg">
+                            {showHint ? letter : currentGuess[index] || ''}
+                        </span>
+                    ))}
+                </div>
+                <button onClick={handleNextWord} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
+                    →
+                </button>
             </div>
-
             {/* 알파벳 버튼 */}
             <div className="flex justify-center flex-wrap gap-2 mt-4">
                 {shuffledLetters.map((letter, idx) => (
                     <button
                         key={`${letter}-${idx}`}
                         onClick={() => handleLetterClick(letter, idx)}
-                        className={`rounded px-3 py-2 transition-colors ${
-                            shakeIndex === idx
-                                ? 'animate-shake-fast bg-red-600'
-                                : 'bg-blue-600 hover:bg-blue-700 text-white'
-                        }`}
-                        disabled={completed}
+                        disabled={clickedLetters.includes(letter) || completed}
+                        className={`
+                                    relative rounded-full w-12 h-12 text-lg transition
+                                    ${
+                                        clickedLetters.includes(letter)
+                                            ? 'bg-gray-400 cursor-not-allowed btn-x'
+                                            : wrongLetter === letter
+                                            ? 'bg-red-600 text-white'
+                                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                                    }
+                                    ${shakeIndex === idx ? 'animate-shake-fast' : ''}
+                                    ${clickedLetters.includes(letter) && !completed ? 'animate-bling' : ''}
+                                    `}
                     >
                         {letter}
                     </button>
@@ -472,28 +498,20 @@ export default function WordGuessPage() {
                 </div>
             )}
 
-            {/* 화살표 */}
-            <div className="flex justify-between mt-4">
-                <button onClick={handlePrevWord} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
-                    ←
+            <div className="flex justify-center gap-4 mt-4">
+                <button onClick={handleReset} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    Again
                 </button>
-                <button onClick={handleNextWord} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
-                    →
+                <button
+                    onClick={() => {
+                        setShowHint(true);
+                        setTimeout(() => setShowHint(false), 2000);
+                    }}
+                    className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500"
+                >
+                    Hint
                 </button>
             </div>
-
-            <button onClick={handleReset} className="mt-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                Again
-            </button>
-            <button
-                onClick={() => {
-                    setShowHint(true);
-                    setTimeout(() => setShowHint(false), 1000); // 2초
-                }}
-                className="mt-2 bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500"
-            >
-                Hint
-            </button>
             {/* CSS */}
             <style jsx>{`
                 .animate-shake-fast {
@@ -522,6 +540,41 @@ export default function WordGuessPage() {
                 .animate-pop {
                     animation: pop 1s ease-in-out forwards;
                 }
+                @keyframes bling {
+                    0% {
+                        background-color: yellow;
+                    }
+                    50% {
+                        background-color: white;
+                    }
+                    100% {
+                        background-color: yellow;
+                    }
+                }
+                .animate-bling {
+                    animation: bling 0.5s ease;
+                }
+                .btn-strike::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    height: 2px;
+                    width: 100%;
+                    background-color: black;
+                    transform: translateY(-50%);
+                }
+
+                .btn-x::after {
+                    content: '✕';
+                    position: absolute;
+                    color: black;
+                    font-size: 1.2rem;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+
                 @keyframes pop {
                     0% {
                         opacity: 0;

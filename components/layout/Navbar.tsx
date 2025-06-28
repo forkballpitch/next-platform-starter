@@ -54,7 +54,7 @@ export default function Navbar() {
             <div className="grow basis-0 font-semibold text-lg sm:text-xl text-orange-500 cursor-pointer sm:flex sm:gap-2">
                 {/* <MdPages className="text-4xl my-auto text-gray-500" /> */}
                 <Link href="/" className="my-auto block">
-                    VOCA
+                    PIGGY MOMMY
                 </Link>
             </div>
 

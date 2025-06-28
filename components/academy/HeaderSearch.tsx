@@ -88,13 +88,13 @@ export default function HeaderSearch() {
     return (
         <div
             ref={wrapperRef}
-            className="fixed top-0 left-0 right-0 z-50 bg-white px-4 py-1 shadow-md border-b border-gray-200"
+            className="fixed top-0 left-0 right-0 z-50 bg-orange-500 px-4 py-1 shadow-md border-b border-orange-600"
         >
             <header className="flex items-center gap-3">
                 {/* 홈 아이콘 */}
                 <button
                     onClick={() => router.push('/')}
-                    className="text-gray-600 hover:text-gray-900 transition-colors p-1"
+                    className="text-white hover:text-orange-100 transition-colors p-1"
                 >
                     <Home className="w-6 h-6" />
                 </button>
@@ -102,14 +102,29 @@ export default function HeaderSearch() {
                 {/* 검색 입력창 */}
                 <div className="flex-1 relative">
                     <input
-                        className="w-full h-9 pl-4 pr-10 rounded-md text-sm text-gray-800 placeholder-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                        className="
+                                w-full
+                                h-9
+                                pl-4
+                                pr-10
+                                rounded-md
+                                text-base
+                                text-gray-800
+                                placeholder-gray-400
+                                border
+                                border-orange-300
+                                bg-white
+                                focus:outline-none
+                                focus:ring-2
+                                focus:ring-orange-600
+                                "
                         placeholder="학원명을 입력하세요"
                         value={localInput}
                         onChange={(e) => setLocalInput(e.target.value)}
                     />
                     <button
                         onClick={handleSearch}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-orange-700 hover:text-orange-900"
                         aria-label="검색"
                     >
                         <Search className="w-4 h-4" />
@@ -120,7 +135,7 @@ export default function HeaderSearch() {
                             {suggestions.map((name, idx) => (
                                 <li
                                     key={idx}
-                                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                                    className="p-2 hover:bg-orange-100 cursor-pointer"
                                     onMouseDown={() => {
                                         setLocalInput(name);
                                         setKeyword(name);
@@ -143,11 +158,11 @@ export default function HeaderSearch() {
                     )}
 
                     {showPopup && searchResults.length > 0 && (
-                        <ul className="absolute w-full bg-white border rounded shadow mt-1 max-h-48 overflow-y-auto z-50">
+                        <ul className="absolute w-full bg-white border rounded shadow mt-1 max-h-48 overflow-y-auto z-50 text-gray-800">
                             {searchResults.map((place, idx) => (
                                 <li
                                     key={idx}
-                                    className="p-2 border-b hover:bg-gray-100 cursor-pointer"
+                                    className="p-2 border-b hover:bg-orange-100 cursor-pointer"
                                     onClick={() => handleSelectPlace(place)}
                                 >
                                     <div className="font-semibold text-sm">{place.name}</div>
