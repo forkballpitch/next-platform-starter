@@ -377,19 +377,27 @@ export default function WordGuessPage() {
 
             {/* 유닛 선택 버튼 */}
             {/* 유닛 선택 버튼 */}
-            <div className="flex justify-center flex-wrap gap-2 mb-2">
+            {/* 유닛 선택 버튼 (가로 스크롤) */}
+            <div
+                className="flex overflow-x-scroll whitespace-nowrap gap-2 mb-2 px-2 scroll-smooth"
+                style={{
+                    scrollbarWidth: 'auto', // Firefox
+                    msOverflowStyle: 'auto' // IE/Edge
+                }}
+            >
                 {unitList.map((unit, index) => (
                     <button
                         key={unit.name}
                         onClick={() => handleSelectUnit(index)}
-                        className={`w-20 h-10 rounded border text-sm font-semibold
-                        ${index === selectedUnitIndex ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-800'}
-                    `}
+                        className={`inline-block w-24 h-10 rounded border text-sm font-semibold shrink-0
+        ${index === selectedUnitIndex ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-800'}
+      `}
                     >
                         {unit.name}
                     </button>
                 ))}
             </div>
+
             <hr className="border-t border-gray-300 mb-2" />
             <div className="text-xs text-gray-500 mb-2">{currentUnit.words.length} words</div>
             {/* 단어 index 선택 */}
