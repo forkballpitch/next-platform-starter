@@ -45,8 +45,20 @@ export default function RegionSelector() {
         fetchData();
     }, []);
 
+    // string을 받는 새로운 핸들러
+    const handleGuClick = (gu: string) => {
+        setSelectedGu(gu);
+        setSelectedDong('');
+        setAptDeals([]);
+    };
+
+    const handleDongClick = (dongName: string) => {
+        setSelectedDong(dongName);
+        setAptDeals([]);
+    };
+
     const handleGuChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const gu = e;
+        const gu = e.target.value; // ✅
         setSelectedGu(gu);
         setSelectedDong('');
         setAptDeals([]);
@@ -54,7 +66,7 @@ export default function RegionSelector() {
     };
 
     const handleDongChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const fullName = e;
+        const fullName = e.target.value; // ✅
         setSelectedDong(fullName);
         setDongOpen(false);
 
@@ -109,7 +121,7 @@ export default function RegionSelector() {
                         {guList.map((gu) => (
                             <li
                                 key={gu}
-                                onClick={() => handleGuChange(gu)}
+                                onClick={() => handleGuClick(gu)}
                                 className="p-1 hover:bg-gray-100 cursor-pointer"
                             >
                                 {gu}
@@ -135,7 +147,7 @@ export default function RegionSelector() {
                         {filteredDongs.map((dong) => (
                             <li
                                 key={dong.region_cd}
-                                onClick={() => handleDongChange(dong.locatadd_nm)}
+                                onClick={() => handleDongClick(dong.locatadd_nm)}
                                 className="p-1 hover:bg-gray-100 cursor-pointer"
                             >
                                 {dong.locallow_nm}

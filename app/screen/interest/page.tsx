@@ -543,19 +543,23 @@ export default function WordGuessPage() {
                     <button
                         key={`${letter}-${idx}`}
                         onClick={() => handleLetterClick(letter, idx)}
-                        disabled={clickedLetters.includes(letter) || completed}
+                        disabled={clickedLetters.some((c) => c.letter === letter && c.idx === idx) || completed}
                         className={`
-                                    relative rounded-full w-12 h-12 text-lg transition
-                                    ${
-                                        clickedLetters.includes(letter)
-                                            ? 'bg-gray-400 cursor-not-allowed btn-x'
-                                            : wrongLetter === letter
-                                            ? 'bg-red-600 text-white'
-                                            : 'bg-blue-600 hover:bg-blue-700 text-white'
-                                    }
-                                    ${shakeIndex === idx ? 'animate-shake-fast' : ''}
-                                    ${clickedLetters.includes(letter) && !completed ? 'animate-bling' : ''}
-                                    `}
+                            relative rounded-full w-12 h-12 text-lg transition
+                            ${
+                                clickedLetters.some((c) => c.letter === letter && c.idx === idx)
+                                    ? 'bg-gray-400 cursor-not-allowed btn-x'
+                                    : wrongLetter === letter
+                                    ? 'bg-red-600 text-white'
+                                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                            }
+                            ${shakeIndex === idx ? 'animate-shake-fast' : ''}
+                            ${
+                                clickedLetters.some((c) => c.letter === letter && c.idx === idx) && !completed
+                                    ? 'animate-bling'
+                                    : ''
+                            }
+                            `}
                     >
                         {letter}
                     </button>
