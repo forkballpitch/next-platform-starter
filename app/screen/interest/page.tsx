@@ -342,7 +342,7 @@ export default function WordGuessPage() {
     const [shuffledLetters, setShuffledLetters] = useState<string[]>([]);
     const currentUnit = unitList[selectedUnitIndex] ?? null;
     const currentWordObject = currentUnit?.words?.[currentWordIndex] ?? null;
-
+    const [solvedCount, setSolvedCount] = useState(0);
     useEffect(() => {
         setClickedLetters([]);
     }, [currentWordIndex, selectedUnitIndex, selectedBook]);
@@ -359,7 +359,7 @@ export default function WordGuessPage() {
         setCurrentGuess([]);
         setClickedLetters([]);
         setCompleted(false);
-
+        setSolvedCount(0); // 유닛 바뀔 때 리셋
         // 새로 바뀐 책의 첫 단어를 기준으로 알파벳 다시 셔플
         const firstWord = unitList[0].words[0].word;
         setShuffledLetters(shuffleArray(firstWord.split('')));
@@ -382,29 +382,33 @@ export default function WordGuessPage() {
         const nextIndex = currentGuess.length;
 
         if (answerArray[nextIndex] === letter) {
-            // 정답 소리
             correctSound.current?.play();
             const updated = [...currentGuess, letter];
             setCurrentGuess(updated);
-            setClickedLetters((prev) => [...prev, letter]);
+            setClickedLetters((prev) => [...prev, { letter, idx }]);
             setShowYoshi(true);
             setTimeout(() => setShowYoshi(false), 1000);
 
             if (updated.length === answerArray.length) {
+                if (updated.length === answerArray.length) {
+                    setCompleted(true);
+                    setSolvedCount((prev) => prev + 1); // 맞출 때마다 +1
+                    fanfareSound.current?.play();
+                }
+
                 setCompleted(true);
                 fanfareSound.current?.play();
             }
         } else {
-            // 오답 소리
             wrongSound.current?.play();
-            // 틀린 글자 빨간색 표시
             setWrongLetter(letter);
             setShakeIndex(idx);
             setShowKoopa(true);
+            setClickedLetters((prev) => [...prev, { letter, idx }]); // 틀려도 기억
 
             setTimeout(() => setShowKoopa(false), 1000);
             setTimeout(() => setShakeIndex(null), 300);
-            setTimeout(() => setWrongLetter(null), 500); // 0.5초 뒤 원복
+            setTimeout(() => setWrongLetter(null), 500);
         }
     };
 
@@ -435,7 +439,8 @@ export default function WordGuessPage() {
         setCurrentWordIndex(0);
     };
 
-    const [clickedLetters, setClickedLetters] = useState<string[]>([]);
+    const [clickedLetters, setClickedLetters] = useState<{ letter: string; idx: number }[]>([]);
+
     const [wrongLetter, setWrongLetter] = useState<string | null>(null);
     return (
         <div className="max-w-md mx-auto p-6 bg-white rounded shadow space-y-4 text-center relative overflow-hidden">
@@ -445,7 +450,7 @@ export default function WordGuessPage() {
             ) : (
                 <>
                     {/* 원래의 JSX 구조 */}
-                    <div>{currentWordObject.word}</div>
+
                     {/* etc... */}
                 </>
             )}
@@ -559,10 +564,22 @@ export default function WordGuessPage() {
 
             {completed && (
                 <div className="flex flex-col items-center justify-center mt-2 space-y-2">
-                    <div className="text-green-600 font-bold">YOU GOT IT! 🎉</div>
-                    <img src="/images/mario.png" alt="mario thumbs up" className="w-20 animate-bounce" />
+                    <div className="text-green-600 font-bold animate-bounce">YOU GOT IT! 🎉</div>
+                    {/* <img src="/images/mario.png" alt="mario thumbs up" className="w-20 animate-bounce" /> */}
                 </div>
             )}
+
+            {/* 피카츄 진행 표시 */}
+            <div className="flex justify-center flex-wrap gap-1 mt-4">
+                {Array.from({ length: solvedCount }).map((_, idx) => (
+                    <img
+                        key={idx}
+                        src={`/images/pocketmon/${idx + 1}.png`}
+                        alt={`pikachu ${idx + 1}`}
+                        className="w-12 h-12"
+                    />
+                ))}
+            </div>
 
             {/* 요시 Good Job */}
             {showYoshi && (

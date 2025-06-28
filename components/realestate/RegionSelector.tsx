@@ -13,6 +13,8 @@ interface DongData {
 export default function RegionSelector() {
     const [dongList, setDongList] = useState<DongData[]>([]);
     const [guList, setGuList] = useState<string[]>([]);
+    const [dongOpen, setDongOpen] = useState(false);
+    const [guOpen, setGuOpen] = useState(false);
 
     const {
         selectedGu,
@@ -36,6 +38,7 @@ export default function RegionSelector() {
             const gus = Array.from(
                 new Set(rows.map((r: DongData) => r.locatadd_nm.split(' ')[1]).filter(Boolean))
             ) as string[];
+            console.log('✅ 구 목록:', gus);
             setGuList(gus);
         }
 
@@ -43,15 +46,17 @@ export default function RegionSelector() {
     }, []);
 
     const handleGuChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const gu = e.target.value;
+        const gu = e;
         setSelectedGu(gu);
         setSelectedDong('');
         setAptDeals([]);
+        setGuOpen(false);
     };
 
     const handleDongChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const fullName = e.target.value;
+        const fullName = e;
         setSelectedDong(fullName);
+        setDongOpen(false);
 
         const row = dongList.find((d) => d.locatadd_nm === fullName);
         if (!row) return;
@@ -94,28 +99,51 @@ export default function RegionSelector() {
             className="absolute top-20 left-4 z-50 bg-white shadow-md p-2 rounded flex gap-2"
             style={{ marginTop: '62px', marginLeft: '35px' }}
         >
-            <select value={selectedGu} onChange={handleGuChange} className="border p-1 rounded">
-                <option value="">구 선택</option>
-                {guList.map((gu) => (
-                    <option key={gu} value={gu}>
-                        {gu}
-                    </option>
-                ))}
-            </select>
+            {/* GU DROPDOWN */}
+            <div className="relative">
+                <button onClick={() => setGuOpen((prev) => !prev)} className="border p-1 rounded w-28 text-left">
+                    {selectedGu || '구 선택'}
+                </button>
+                {guOpen && (
+                    <ul className="absolute bg-white border rounded shadow w-28 max-h-60 overflow-auto z-50">
+                        {guList.map((gu) => (
+                            <li
+                                key={gu}
+                                onClick={() => handleGuChange(gu)}
+                                className="p-1 hover:bg-gray-100 cursor-pointer"
+                            >
+                                {gu}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
 
-            <select
-                value={selectedDong}
-                onChange={handleDongChange}
-                className="border p-1 rounded"
-                disabled={!selectedGu}
-            >
-                <option value="">동 선택</option>
-                {filteredDongs.map((dong) => (
-                    <option key={dong.region_cd} value={dong.locatadd_nm}>
-                        {dong.locallow_nm}
-                    </option>
-                ))}
-            </select>
+            {/* DONG DROPDOWN */}
+            <div className="relative">
+                <button
+                    onClick={() => {
+                        if (selectedGu) setDongOpen((prev) => !prev);
+                    }}
+                    className="border p-1 rounded w-28 text-left disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    disabled={!selectedGu}
+                >
+                    {selectedDong || '동 선택'}
+                </button>
+                {dongOpen && selectedGu && (
+                    <ul className="absolute bg-white border rounded shadow w-28 max-h-60 overflow-auto z-50">
+                        {filteredDongs.map((dong) => (
+                            <li
+                                key={dong.region_cd}
+                                onClick={() => handleDongChange(dong.locatadd_nm)}
+                                className="p-1 hover:bg-gray-100 cursor-pointer"
+                            >
+                                {dong.locallow_nm}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 }
