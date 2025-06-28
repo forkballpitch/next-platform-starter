@@ -38,16 +38,16 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, CalendarCheck, MapPin, Bot, Mail } from 'lucide-react'; // lucide 아이콘 import
+import { Home, CalendarCheck, MapPin, Bot, Mail, PenBox } from 'lucide-react'; // lucide 아이콘 import
 
 const TABS = [
-    { label: '홈', path: '/', icon: <Home size={20} /> },
-    { label: '학원지도', path: '/screen/academymap', icon: <MapPin size={20} /> },
-    { label: '실거래지도', path: '/screen/aptMap', icon: <MapPin size={20} /> },
-    { label: '실거래', path: '/screen/apt', icon: <Mail size={20} /> },
-    { label: '엄마할일', path: '/screen/momschedule', icon: <CalendarCheck size={20} /> },
-    { label: '학습AI상담', path: '/screen/ask', icon: <Bot size={20} /> },
-    { label: '학원문의', path: '/screen/interest', icon: <Mail size={20} /> }
+    { label: '홈', path: '/', icon: <Home size={20} /> }
+    // { label: '학원지도', path: '/screen/academymap', icon: <MapPin size={20} /> },
+    // { label: '실거래지도', path: '/screen/aptMap', icon: <MapPin size={20} /> },
+    // { label: '실거래', path: '/screen/apt', icon: <Mail size={20} /> },
+    // { label: '엄마할일', path: '/screen/momschedule', icon: <CalendarCheck size={20} /> },
+    // { label: '학습AI상담', path: '/screen/ask', icon: <Bot size={20} /> },
+    // { label: '아이공부', path: '/screen/interest', icon: <PenBox size={20} /> }
 ];
 
 export default function Footer() {

@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { MdMap } from 'react-icons/md';
+import { MdMap, MdPages } from 'react-icons/md';
 import { RxDividerVertical } from 'react-icons/rx';
 import { AiOutlineSearch } from 'react-icons/ai';
 
@@ -52,10 +52,10 @@ export default function Navbar() {
             )}
         >
             <div className="grow basis-0 font-semibold text-lg sm:text-xl text-orange-500 cursor-pointer sm:flex sm:gap-2">
-                <MdMap className="text-4xl my-auto text-gray-500" />
-                {/* <Link href="/" className="my-auto block">
-                    아이공부
-                </Link> */}
+                {/* <MdPages className="text-4xl my-auto text-gray-500" /> */}
+                <Link href="/" className="my-auto block">
+                    VOCA
+                </Link>
             </div>
 
             {/* {showFilter === false ? (
