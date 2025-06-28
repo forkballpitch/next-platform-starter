@@ -4,17 +4,17 @@ import './globals.css';
 import { NextLayout, NextProvider } from './providers';
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://fastcampus-nextbnb.vercel.app'),
+    metadataBase: new URL('https://piggymom.vercel.app'),
     alternates: {
         canonical: '/'
     },
     title: '단어공부',
     description: '단어공부',
-    keywords: ['Nextbnb', '여행', '숙소', '호텔', '펜션', '최저가'],
+    keywords: ['piggymom', '여행', '숙소', '호텔', '펜션', '최저가'],
     openGraph: {
         title: '단어공부',
         description: '단어공부',
-        url: 'https://fastcampus-nextbnb.vercel.app',
+        url: 'https://piggymom.vercel.app',
         siteName: '단어공부',
         locale: 'ko_KR',
         type: 'website'
