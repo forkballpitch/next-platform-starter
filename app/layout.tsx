@@ -8,14 +8,14 @@ export const metadata: Metadata = {
     alternates: {
         canonical: '/'
     },
-    title: 'Fastcampus Nextbnb로 여행하기',
-    description: 'Fastcampus Nextbnb로 여행을 계획해보세요.',
+    title: '단어공부',
+    description: '단어공부',
     keywords: ['Nextbnb', '여행', '숙소', '호텔', '펜션', '최저가'],
     openGraph: {
-        title: 'nextbnb로 여행하기',
-        description: 'nextbnb로 여행을 계획해보세요',
+        title: '단어공부',
+        description: '단어공부',
         url: 'https://fastcampus-nextbnb.vercel.app',
-        siteName: 'Fastcampus Nextbnb',
+        siteName: '단어공부',
         locale: 'ko_KR',
         type: 'website'
     },
