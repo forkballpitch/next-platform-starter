@@ -404,7 +404,7 @@ export default function WordGuessPage() {
             setWrongLetter(letter);
             setShakeIndex(idx);
             setShowKoopa(true);
-            setClickedLetters((prev) => [...prev, { letter, idx }]); // 틀려도 기억
+            // setClickedLetters((prev) => [...prev, { letter, idx }]); // 틀린 것도 추가
 
             setTimeout(() => setShowKoopa(false), 1000);
             setTimeout(() => setShakeIndex(null), 300);
@@ -418,6 +418,7 @@ export default function WordGuessPage() {
         setShakeIndex(null);
         setShowYoshi(false);
         setShowKoopa(false);
+        setClickedLetters([]); // ← 이 줄을 반드시 추가
     };
 
     const handleNextWord = () => {
