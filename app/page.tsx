@@ -109,493 +109,90 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+    MapPin,
+    Heart,
+    Search,
+    Home,
+    Star,
+    TrendingDown,
+    TrendingUp,
+    ThumbsUp,
+    Plus,
+    Scale,
+    BarChart,
+    HeartPulse,
+    MoveHorizontal
+} from 'lucide-react';
 
-export default function WordGuessPage() {
-    const [showHint, setShowHint] = useState(false);
-    const unitList = [
-        {
-            name: 'Unit 1',
-            words: [
-                { word: 'bold', meaning: 'not afraid; showing courage' },
-                { word: 'coward', meaning: 'a person who is easily scared and avoids danger' },
-                { word: 'empty', meaning: 'with nothing inside' },
-                { word: 'flee', meaning: 'to run away from danger' },
-                { word: 'fortune', meaning: 'luck or something valuable' },
-                { word: 'gasp', meaning: 'to breathe in quickly from fear or surprise' },
-                { word: 'grin', meaning: 'a big smile' },
-                { word: 'sharp', meaning: 'having an edge or point that can cut' },
-                { word: 'sneaky', meaning: 'acting in a secret and tricky way' },
-                { word: 'stare', meaning: 'to look at something for a long time' }
-            ]
-        },
-        {
-            name: 'Unit 2',
-            words: [
-                { word: 'dart', meaning: 'to move quickly' },
-                { word: 'fog', meaning: 'thick mist' },
-                { word: 'gulp', meaning: 'to swallow quickly' },
-                { word: 'host', meaning: 'a person who receives guests' },
-                { word: 'rude', meaning: 'not polite' },
-                { word: 'scold', meaning: 'to speak angrily' },
-                { word: 'serious', meaning: 'not joking' },
-                { word: 'sly', meaning: 'clever and sneaky' },
-                { word: 'upset', meaning: 'angry or worried' },
-                { word: 'weary', meaning: 'tired' }
-            ]
-        },
-        {
-            name: 'Unit 3',
-            words: [
-                { word: 'area', meaning: 'a space or region' },
-                { word: 'complain', meaning: 'to say you are unhappy about something' },
-                { word: 'gather', meaning: 'to collect or bring together' },
-                { word: 'market', meaning: 'a place where people buy and sell things' },
-                { word: 'price', meaning: 'the amount of money something costs' },
-                { word: 'rapid', meaning: 'fast or quick' },
-                { word: 'ripe', meaning: 'ready to eat' },
-                { word: 'seller', meaning: 'a person who sells something' },
-                { word: 'surround', meaning: 'to be all around something' },
-                { word: 'yank', meaning: 'to pull quickly and strongly' }
-            ]
-        },
-        {
-            name: 'Unit 4',
-            words: [
-                { word: 'cozy', meaning: 'warm and comfortable' },
-                { word: 'fierce', meaning: 'strong and aggressive' },
-                { word: 'freezing', meaning: 'very cold' },
-                { word: 'hatch', meaning: 'to come out of an egg' },
-                { word: 'howl', meaning: 'a long, loud cry' },
-                { word: 'huddle', meaning: 'to crowd together' },
-                { word: 'hunt', meaning: 'to chase and kill animals for food' },
-                { word: 'protect', meaning: 'to keep safe' },
-                { word: 'slide', meaning: 'to move smoothly over a surface' },
-                { word: 'temperature', meaning: 'how hot or cold something is' }
-            ]
-        },
-        {
-            name: 'Unit 5',
-            words: [
-                { word: 'blush', meaning: 'to become red in the face from embarrassment' },
-                { word: 'chatter', meaning: 'to talk quickly or repeatedly' },
-                { word: 'doze', meaning: 'to sleep lightly' },
-                { word: 'drench', meaning: 'to make completely wet' },
-                { word: 'dusk', meaning: 'the time when the sun goes down' },
-                { word: 'peer', meaning: 'to look carefully' },
-                { word: 'slippery', meaning: 'hard to hold or stand on because it is wet or smooth' },
-                { word: 'startle', meaning: 'to surprise suddenly' },
-                { word: 'stumble', meaning: 'to trip or lose balance' },
-                { word: 'swift', meaning: 'moving very fast' }
-            ]
-        },
-        {
-            name: 'Unit 6',
-            words: [
-                { word: 'burst', meaning: 'to break open suddenly' },
-                { word: 'examine', meaning: 'to look at closely' },
-                { word: 'fasten', meaning: 'to close or attach something' },
-                { word: 'frantic', meaning: 'very worried or excited' },
-                { word: 'judge', meaning: 'to form an opinion' },
-                { word: 'shock', meaning: 'a sudden surprise' },
-                { word: 'space', meaning: 'an empty area' },
-                { word: 'spread', meaning: 'to open out or expand' },
-                { word: 'squirm', meaning: 'to twist and turn' },
-                { word: 'tangle', meaning: 'a twisted mess' }
-            ]
-        },
-        {
-            name: 'Unit 7',
-            words: [
-                { word: 'applause', meaning: 'the clapping of hands to show approval' },
-                { word: 'instrument', meaning: 'a tool or device for making music' },
-                { word: 'lively', meaning: 'full of energy' },
-                { word: 'nervous', meaning: 'worried or afraid' },
-                { word: 'perform', meaning: 'to act or do something in front of people' },
-                { word: 'role', meaning: 'the part an actor plays' },
-                { word: 'shriek', meaning: 'a loud, high cry' },
-                { word: 'sway', meaning: 'to move back and forth' },
-                { word: 'timid', meaning: 'shy or lacking courage' },
-                { word: 'whirl', meaning: 'to spin around' }
-            ]
-        },
-        {
-            name: 'Unit 8',
-            words: [
-                { word: 'delighted', meaning: 'very happy' },
-                { word: 'grateful', meaning: 'thankful' },
-                { word: 'groan', meaning: 'a low sound made from pain or sadness' },
-                { word: 'mischief', meaning: 'playful or naughty behavior' },
-                { word: 'romp', meaning: 'to play roughly and happily' },
-                { word: 'selfish', meaning: 'caring only about yourself' },
-                { word: 'splendid', meaning: 'very good or beautiful' },
-                { word: 'sprinkle', meaning: 'to scatter in drops or small pieces' },
-                { word: 'stormy', meaning: 'with strong winds and rain' },
-                { word: 'stun', meaning: 'to shock or surprise greatly' }
-            ]
-        },
-        {
-            name: 'Unit 9',
-            words: [
-                { word: 'attach', meaning: 'to join or connect' },
-                { word: 'complete', meaning: 'to finish' },
-                { word: 'create', meaning: 'to make something new' },
-                { word: 'dainty', meaning: 'small and pretty' },
-                { word: 'damage', meaning: 'harm or injury' },
-                { word: 'edge', meaning: 'the border or side of something' },
-                { word: 'jealous', meaning: "feeling upset about someone else's success" },
-                { word: 'misty', meaning: 'full of mist or fog' },
-                { word: 'roam', meaning: 'to travel without a fixed plan' },
-                { word: 'silent', meaning: 'without sound' }
-            ]
-        },
-        {
-            name: 'Unit 10',
-            words: [
-                { word: 'anxious', meaning: 'worried or nervous' },
-                { word: 'creak', meaning: 'a long squeaking sound' },
-                { word: 'drowsy', meaning: 'sleepy' },
-                { word: 'exchange', meaning: 'to trade one thing for another' },
-                { word: 'footprint', meaning: 'a mark left by a foot' },
-                { word: 'limp', meaning: 'to walk with difficulty' },
-                { word: 'plead', meaning: 'to beg' },
-                { word: 'polite', meaning: 'kind and respectful' },
-                { word: 'trust', meaning: 'to believe someone is honest' },
-                { word: 'whimper', meaning: 'to cry with soft sounds' }
-            ]
-        },
-        {
-            name: 'Unit 11',
-            words: [
-                { word: 'celebrate', meaning: 'to have a party for something special' },
-                { word: 'comfort', meaning: 'to make someone feel better' },
-                { word: 'destroy', meaning: 'to ruin completely' },
-                { word: 'injury', meaning: 'harm done to the body' },
-                { word: 'monument', meaning: 'a building to honor a person or event' },
-                { word: 'polish', meaning: 'to make shiny by rubbing' },
-                { word: 'rescue', meaning: 'to save from danger' },
-                { word: 'seek', meaning: 'to look for' },
-                { word: 'symbol', meaning: 'a picture or sign that means something' },
-                { word: 'tidy', meaning: 'neat and clean' }
-            ]
-        },
-        {
-            name: 'Unit 12',
-            words: [
-                { word: 'argue', meaning: 'to speak in disagreement' },
-                { word: 'clutch', meaning: 'to hold tightly' },
-                { word: 'exhausted', meaning: 'very tired' },
-                { word: 'furious', meaning: 'very angry' },
-                { word: 'gently', meaning: 'softly or kindly' },
-                { word: 'journey', meaning: 'a long trip' },
-                { word: 'loosen', meaning: 'to make less tight' },
-                { word: 'remove', meaning: 'to take away' },
-                { word: 'traveler', meaning: 'someone who goes on trips' },
-                { word: 'wrap', meaning: 'to cover with paper or cloth' }
-            ]
-        }
+export default function HomeScreen() {
+    const router = useRouter();
 
-        // ...Unit 3~12도 같은 형식으로 채우면 됩니다.
+    const handleGoToWordGame = () => {
+        router.push('/screen/interest');
+    };
+
+    const quickMenus = [
+        { icon: <MapPin className="w-8 h-8 text-gray-500" />, label: '지도로 찾기' },
+        { icon: <Search className="w-8 h-8 text-gray-500" />, label: '지역명 검색' },
+        { icon: <Home className="w-8 h-8 text-gray-500" />, label: '분양정보' },
+        { icon: <Heart className="w-8 h-8 text-gray-500" />, label: '관심단지' }
     ];
 
-    const [selectedUnitIndex, setSelectedUnitIndex] = useState(0);
-    const [currentWordIndex, setCurrentWordIndex] = useState(0);
-    const [currentGuess, setCurrentGuess] = useState<string[]>([]);
-    const [completed, setCompleted] = useState(false);
-    const [shakeIndex, setShakeIndex] = useState<number | null>(null);
-    const [showYoshi, setShowYoshi] = useState(false);
-    const [showKoopa, setShowKoopa] = useState(false);
-    const [shuffledLetters, setShuffledLetters] = useState<string[]>([]);
-
-    const currentUnit = unitList[selectedUnitIndex];
-    const currentWordObject = currentUnit.words[currentWordIndex];
-    const currentWord = currentWordObject.word;
-    const answerArray = currentWord.split('');
-
-    const shuffleArray = (array: string[]) => {
-        return [...array].sort(() => Math.random() - 0.5);
-    };
-
-    useEffect(() => {
-        setClickedLetters([]);
-    }, [currentWordIndex, selectedUnitIndex]);
-
-    useEffect(() => {
-        setShuffledLetters(shuffleArray(answerArray));
-        handleReset();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentWordIndex, selectedUnitIndex]);
-
-    const handleLetterClick = (letter: string, idx: number) => {
-        if (completed) return;
-
-        const nextIndex = currentGuess.length;
-
-        if (answerArray[nextIndex] === letter) {
-            const updated = [...currentGuess, letter];
-            setCurrentGuess(updated);
-            setClickedLetters((prev) => [...prev, letter]);
-            setShowYoshi(true);
-            setTimeout(() => setShowYoshi(false), 1000);
-
-            if (updated.length === answerArray.length) {
-                setCompleted(true);
-            }
-        } else {
-            // 틀린 글자 빨간색 표시
-            setWrongLetter(letter);
-            setShakeIndex(idx);
-            setShowKoopa(true);
-
-            setTimeout(() => setShowKoopa(false), 1000);
-            setTimeout(() => setShakeIndex(null), 300);
-            setTimeout(() => setWrongLetter(null), 500); // 0.5초 뒤 원복
+    const icons = [
+        { icon: <TrendingDown className="w-6 h-6 text-yellow-600" />, label: '최근하락' },
+        { icon: <ThumbsUp className="w-6 h-6 text-blue-600" />, label: '최고가' },
+        { icon: <Plus className="w-6 h-6 text-green-600" />, label: '매물증감' },
+        { icon: <MoveHorizontal className="w-6 h-6 text-gray-800" />, label: '가격비교' },
+        { icon: <TrendingUp className="w-6 h-6 text-yellow-600" />, label: '최고상승' },
+        { icon: <HeartPulse className="w-6 h-6 text-red-600" />, label: '가격변동' },
+        { icon: <Scale className="w-6 h-6 text-gray-600" />, label: '여러단지비교' },
+        { icon: <MapPin className="w-6 h-6 text-blue-600" />, label: '많이산단지' },
+        { icon: <BarChart className="w-6 h-6 text-green-600" />, label: '거래량' },
+        {
+            icon: <Star className="w-6 h-6 text-orange-500" />,
+            label: '단어게임',
+            onClick: handleGoToWordGame
         }
-    };
+    ];
 
-    const handleReset = () => {
-        setCurrentGuess([]);
-        setCompleted(false);
-        setShakeIndex(null);
-        setShowYoshi(false);
-        setShowKoopa(false);
-    };
-
-    const handleNextWord = () => {
-        const next = (currentWordIndex + 1) % currentUnit.words.length;
-        setCurrentWordIndex(next);
-    };
-
-    const handlePrevWord = () => {
-        const prev = (currentWordIndex - 1 + currentUnit.words.length) % currentUnit.words.length;
-        setCurrentWordIndex(prev);
-    };
-
-    const handleSelectWord = (index: number) => {
-        setCurrentWordIndex(index);
-    };
-
-    const handleSelectUnit = (index: number) => {
-        setSelectedUnitIndex(index);
-        setCurrentWordIndex(0);
-    };
-
-    const [clickedLetters, setClickedLetters] = useState<string[]>([]);
-    const [wrongLetter, setWrongLetter] = useState<string | null>(null);
     return (
-        <div className="max-w-md mx-auto p-6 bg-white rounded shadow space-y-4 text-center relative overflow-hidden">
-            <h1 className="text-xl font-bold text-gray-800">📝 Word Guess Game</h1>
-
-            {/* 유닛 선택 버튼 */}
-            {/* 유닛 선택 버튼 */}
-            {/* 유닛 선택 버튼 (가로 스크롤) */}
-            <div
-                className="flex overflow-x-scroll whitespace-nowrap gap-2 mb-2 px-2 scroll-smooth"
-                style={{
-                    scrollbarWidth: 'auto', // Firefox
-                    msOverflowStyle: 'auto' // IE/Edge
-                }}
-            >
-                {unitList.map((unit, index) => (
-                    <button
-                        key={unit.name}
-                        onClick={() => handleSelectUnit(index)}
-                        className={`inline-block w-24 h-10 rounded border text-sm font-semibold shrink-0
-        ${index === selectedUnitIndex ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-800'}
-      `}
-                    >
-                        {unit.name}
-                    </button>
-                ))}
-            </div>
-
-            <hr className="border-t border-gray-300 mb-2" />
-            <div className="text-xs text-gray-500 mb-2">{currentUnit.words.length} words</div>
-            {/* 단어 index 선택 */}
-            <div className="flex justify-center space-x-1 mb-1">
-                {currentUnit.words.map((_, idx) => (
-                    <button
+        <div className="p-4 bg-gray-50 min-h-screen space-y-4">
+            {/* 상단 4패널 */}
+            <div className="grid grid-cols-2 gap-3">
+                {quickMenus.map((menu, idx) => (
+                    <div
                         key={idx}
-                        onClick={() => handleSelectWord(idx)}
-                        className={`w-8 h-8 rounded-full border text-sm ${
-                            currentWordIndex === idx ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
-                        }`}
+                        className="bg-gray-100 rounded-xl flex flex-col items-center justify-center p-4 shadow"
                     >
-                        {idx + 1}
-                    </button>
+                        {menu.icon}
+                        <span className="mt-2 text-sm text-gray-700">{menu.label}</span>
+                    </div>
                 ))}
             </div>
 
-            {/* 단어 개수와 구분선 */}
-
-            <hr className="border-t border-gray-300 mb-2" />
-            <div className="text-xs text-gray-500 mb-2"> Meaning</div>
-            {/* 단어 뜻 */}
-            <p className="text-gray-600 italic mt-2">{currentWordObject.meaning || '(No meaning yet)'}</p>
-
-            {/* 화살표 */}
-            <div className="flex justify-between mt-4">
-                <button onClick={handlePrevWord} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
-                    ←
-                </button>
-                {/* 정답 칸 */}
-                <div className="flex justify-center space-x-1 mt-2">
-                    {answerArray.map((letter, index) => (
-                        <span key={index} className="w-6 h-8 border-b-2 border-gray-400 text-center text-lg">
-                            {showHint ? letter : currentGuess[index] || ''}
-                        </span>
-                    ))}
+            {/* 추천 패널 */}
+            <div className="flex items-center justify-between rounded-xl p-3 text-white bg-gradient-to-r from-blue-500 to-purple-500">
+                <div className="flex items-center gap-2">
+                    <span className="font-semibold">단어공부</span>
                 </div>
-                <button onClick={handleNextWord} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
-                    →
-                </button>
+                <span className="text-sm">단어공부하자</span>
             </div>
-            {/* 알파벳 버튼 */}
-            <div className="flex justify-center flex-wrap gap-2 mt-4">
-                {shuffledLetters.map((letter, idx) => (
-                    <button
-                        key={`${letter}-${idx}`}
-                        onClick={() => handleLetterClick(letter, idx)}
-                        disabled={clickedLetters.includes(letter) || completed}
-                        className={`
-                                    relative rounded-full w-12 h-12 text-lg transition
-                                    ${
-                                        clickedLetters.includes(letter)
-                                            ? 'bg-gray-400 cursor-not-allowed btn-x'
-                                            : wrongLetter === letter
-                                            ? 'bg-red-600 text-white'
-                                            : 'bg-blue-600 hover:bg-blue-700 text-white'
-                                    }
-                                    ${shakeIndex === idx ? 'animate-shake-fast' : ''}
-                                    ${clickedLetters.includes(letter) && !completed ? 'animate-bling' : ''}
-                                    `}
+
+            {/* 아이콘 그리드 */}
+            <div className="grid grid-cols-5 gap-2">
+                {icons.map((item, idx) => (
+                    <div
+                        key={idx}
+                        className="bg-gray-100 rounded-xl flex flex-col items-center justify-center p-2 cursor-pointer hover:bg-gray-200"
+                        onClick={item.onClick}
                     >
-                        {letter}
-                    </button>
+                        {item.icon}
+                        <span className="text-xs mt-1 text-center break-keep">{item.label}</span>
+                    </div>
                 ))}
             </div>
-
-            {completed && (
-                <div className="flex flex-col items-center justify-center mt-2 space-y-2">
-                    <div className="text-green-600 font-bold">YOU GOT IT! 🎉</div>
-                    <img src="/images/mario.png" alt="mario thumbs up" className="w-20 animate-bounce" />
-                </div>
-            )}
-
-            {/* 요시 Good Job */}
-            {showYoshi && (
-                <div className="absolute top-10 right-10 animate-pop">
-                    <span className="bg-yellow-300 px-2 py-1 rounded text-xs font-bold shadow">Good Job!</span>
-                    <img src="/images/yoshi.png" alt="yoshi" className="w-16" />
-                </div>
-            )}
-
-            {/* 쿠파 Wrong */}
-            {showKoopa && (
-                <div className="absolute top-10 left-10 animate-pop">
-                    <span className="bg-red-600 px-2 py-1 rounded text-xs font-bold text-white shadow">Wrong!</span>
-                    <img src="/images/koopa.png" alt="koopa" className="w-16" />
-                </div>
-            )}
-
-            <div className="flex justify-center gap-4 mt-4">
-                <button onClick={handleReset} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                    Again
-                </button>
-                <button
-                    onClick={() => {
-                        setShowHint(true);
-                        setTimeout(() => setShowHint(false), 2000);
-                    }}
-                    className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500"
-                >
-                    Hint
-                </button>
-            </div>
-            {/* CSS */}
-            <style jsx>{`
-                .animate-shake-fast {
-                    animation: shake-fast 0.3s;
-                }
-                @keyframes shake-fast {
-                    0% {
-                        transform: translateX(0);
-                    }
-                    20% {
-                        transform: translateX(-5px);
-                    }
-                    40% {
-                        transform: translateX(5px);
-                    }
-                    60% {
-                        transform: translateX(-5px);
-                    }
-                    80% {
-                        transform: translateX(5px);
-                    }
-                    100% {
-                        transform: translateX(0);
-                    }
-                }
-                .animate-pop {
-                    animation: pop 1s ease-in-out forwards;
-                }
-                @keyframes bling {
-                    0% {
-                        background-color: yellow;
-                    }
-                    50% {
-                        background-color: white;
-                    }
-                    100% {
-                        background-color: yellow;
-                    }
-                }
-                .animate-bling {
-                    animation: bling 0.5s ease;
-                }
-                .btn-strike::after {
-                    content: '';
-                    position: absolute;
-                    top: 50%;
-                    left: 0;
-                    height: 2px;
-                    width: 100%;
-                    background-color: black;
-                    transform: translateY(-50%);
-                }
-
-                .btn-x::after {
-                    content: '✕';
-                    position: absolute;
-                    color: black;
-                    font-size: 1.2rem;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                }
-
-                @keyframes pop {
-                    0% {
-                        opacity: 0;
-                        transform: scale(0.5);
-                    }
-                    20% {
-                        opacity: 1;
-                        transform: scale(1.2);
-                    }
-                    50% {
-                        transform: scale(1);
-                    }
-                    80% {
-                        opacity: 1;
-                    }
-                    100% {
-                        opacity: 0;
-                        transform: scale(0.5);
-                    }
-                }
-            `}</style>
         </div>
     );
 }

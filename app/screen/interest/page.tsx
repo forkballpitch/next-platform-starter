@@ -1,9 +1,119 @@
+// 'use client';
+// // src/App.js
+// import { NavermapsProvider } from 'react-naver-maps';
+
+// import dynamic from 'next/dynamic';
+// const NaverMapsMarkerCluster = dynamic(() => import('./components/NaverMapsMarkerCluster'), { ssr: false });
+
+// function App() {
+//     // ncpClientId에 네이버 지도 API 클라이언트 키를 넣으면 된다.
+//     // npx create-react-app으로 프로젝트를 생성했다면-별도의 의존성 설치 없이-프로젝트 최상위 폴더에 .env 파일을 생성하고 키를 기입하면 된다.
+//     // .env에는 REACT_APP_NAVER_KEY의 값으로 키를 기입하면 되는데, REACT_APP_라는 prefix에 유의 하자!
+//     const naverKey = 'u7amr5n722';
+
+//     return (
+//         <NavermapsProvider
+//             ncpKeyId={naverKey} // 지도서비스 Client ID
+//             error={<p>error</p>}
+//             loading={<p>Maps Loading</p>}
+//         >
+//             <div style={{ display: 'flex', width: '100dvw', height: '100dvh' }}>
+//                 <NaverMapsMarkerCluster />
+//             </div>
+//         </NavermapsProvider>
+//     );
+// }
+
+//여기는 티스토리
+// 'use client';
+
+// import Link from 'next/link';
+// import { useEffect, useState } from 'react';
+
+// export default function RssList() {
+//     const [items, setItems] = useState([]);
+//     const [loading, setLoading] = useState(true); // 로딩 상태 추가
+
+//     useEffect(() => {
+//         const fetchRss = async () => {
+//             try {
+//                 const res = await fetch('/api/rss');
+//                 const text = await res.text();
+//                 const parser = new DOMParser();
+//                 const xml = parser.parseFromString(text, 'application/xml');
+//                 const parsedItems = Array.from(xml.querySelectorAll('item')).map((item) => ({
+//                     title: item.querySelector('title')?.textContent ?? '',
+//                     link: item.querySelector('link')?.textContent ?? '',
+//                     slug: item.querySelector('link')?.textContent.split('/').pop() ?? '',
+//                     pubDate: item.querySelector('pubDate')?.textContent ?? ''
+//                 }));
+//                 setItems(parsedItems);
+//             } catch (err) {
+//                 console.error('RSS fetch error:', err);
+//             } finally {
+//                 setLoading(false); // 완료 시 로딩 false
+//             }
+//         };
+
+//         fetchRss();
+//     }, []);
+
+//     return (
+//         <div style={{ padding: '1rem' }}>
+//             <h2>📰 코딩학습(Backend)</h2>
+
+//             {loading ? (
+//                 <div style={{ textAlign: 'center', padding: '2rem' }}>
+//                     <div className="spinner" />
+//                     <p>로딩 중입니다...</p>
+//                 </div>
+//             ) : (
+//                 <ul>
+//                     {items.map((item) => (
+//                         <li key={item.slug} style={{ margin: '1rem 0' }}>
+//                             <Link href={`/screen/rss/${item.slug}`}>
+//                                 <span style={{ cursor: 'pointer', fontSize: '1.1rem', color: 'blue' }}>
+//                                     {item.title}
+//                                 </span>
+//                             </Link>
+//                             <div style={{ fontSize: '0.8rem', color: '#888' }}>{item.pubDate}</div>
+//                         </li>
+//                     ))}
+//                 </ul>
+//             )}
+
+//             {/* 간단한 CSS */}
+//             <style jsx>{`
+//                 .spinner {
+//                     width: 40px;
+//                     height: 40px;
+//                     margin: 0 auto;
+//                     border: 5px solid lightgray;
+//                     border-top: 5px solid #3498db;
+//                     border-radius: 50%;
+//                     animation: spin 0.8s linear infinite;
+//                 }
+
+//                 @keyframes spin {
+//                     0% {
+//                         transform: rotate(0deg);
+//                     }
+//                     100% {
+//                         transform: rotate(360deg);
+//                     }
+//                 }
+//             `}</style>
+//         </div>
+//     );
+// }
+
 'use client';
 
 import { useState, useEffect } from 'react';
 
 export default function WordGuessPage() {
-    const unitList = [
+    const [showHint, setShowHint] = useState(false);
+    const redBookUnitList = [
         {
             name: 'Unit 1',
             words: [
@@ -188,6 +298,28 @@ export default function WordGuessPage() {
         // ...Unit 3~12도 같은 형식으로 채우면 됩니다.
     ];
 
+    const purpleBookUnitList = [
+        {
+            name: 'Unit 1',
+            words: [
+                { word: 'test', meaning: 'not afraid; showing courage' },
+                { word: 'coward', meaning: 'a person who is easily scared and avoids danger' },
+                { word: 'empty', meaning: 'with nothing inside' },
+                { word: 'flee', meaning: 'to run away from danger' },
+                { word: 'fortune', meaning: 'luck or something valuable' },
+                { word: 'gasp', meaning: 'to breathe in quickly from fear or surprise' },
+                { word: 'grin', meaning: 'a big smile' },
+                { word: 'sharp', meaning: 'having an edge or point that can cut' },
+                { word: 'sneaky', meaning: 'acting in a secret and tricky way' },
+                { word: 'stare', meaning: 'to look at something for a long time' }
+            ]
+        }
+
+        // ...Unit 3~12도 같은 형식으로 채우면 됩니다.
+    ];
+    const [selectedBook, setSelectedBook] = useState<'red' | 'purple'>('red');
+    const unitList = selectedBook === 'red' ? redBookUnitList : purpleBookUnitList;
+
     const [selectedUnitIndex, setSelectedUnitIndex] = useState(0);
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
     const [currentGuess, setCurrentGuess] = useState<string[]>([]);
@@ -196,9 +328,13 @@ export default function WordGuessPage() {
     const [showYoshi, setShowYoshi] = useState(false);
     const [showKoopa, setShowKoopa] = useState(false);
     const [shuffledLetters, setShuffledLetters] = useState<string[]>([]);
+    const currentUnit = unitList[selectedUnitIndex] ?? unitList[0];
+    const currentWordObject = currentUnit?.words?.[currentWordIndex] ?? currentUnit?.words?.[0];
 
-    const currentUnit = unitList[selectedUnitIndex];
-    const currentWordObject = currentUnit.words[currentWordIndex];
+    if (!currentUnit || !currentWordObject) {
+        return <div>Loading...</div>;
+    }
+
     const currentWord = currentWordObject.word;
     const answerArray = currentWord.split('');
 
@@ -207,10 +343,26 @@ export default function WordGuessPage() {
     };
 
     useEffect(() => {
+        setClickedLetters([]);
+    }, [currentWordIndex, selectedUnitIndex, selectedBook]);
+
+    useEffect(() => {
         setShuffledLetters(shuffleArray(answerArray));
         handleReset();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentWordIndex, selectedUnitIndex]);
+
+    useEffect(() => {
+        setSelectedUnitIndex(0);
+        setCurrentWordIndex(0);
+        setCurrentGuess([]);
+        setClickedLetters([]);
+        setCompleted(false);
+
+        // 새로 바뀐 책의 첫 단어를 기준으로 알파벳 다시 셔플
+        const firstWord = unitList[0].words[0].word;
+        setShuffledLetters(shuffleArray(firstWord.split('')));
+    }, [selectedBook]);
 
     const handleLetterClick = (letter: string, idx: number) => {
         if (completed) return;
@@ -220,7 +372,7 @@ export default function WordGuessPage() {
         if (answerArray[nextIndex] === letter) {
             const updated = [...currentGuess, letter];
             setCurrentGuess(updated);
-
+            setClickedLetters((prev) => [...prev, letter]);
             setShowYoshi(true);
             setTimeout(() => setShowYoshi(false), 1000);
 
@@ -228,10 +380,14 @@ export default function WordGuessPage() {
                 setCompleted(true);
             }
         } else {
+            // 틀린 글자 빨간색 표시
+            setWrongLetter(letter);
             setShakeIndex(idx);
             setShowKoopa(true);
+
             setTimeout(() => setShowKoopa(false), 1000);
             setTimeout(() => setShakeIndex(null), 300);
+            setTimeout(() => setWrongLetter(null), 500); // 0.5초 뒤 원복
         }
     };
 
@@ -261,25 +417,55 @@ export default function WordGuessPage() {
         setSelectedUnitIndex(index);
         setCurrentWordIndex(0);
     };
+
+    const [clickedLetters, setClickedLetters] = useState<string[]>([]);
+    const [wrongLetter, setWrongLetter] = useState<string | null>(null);
     return (
-        <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow space-y-4 text-center relative overflow-hidden">
+        <div className="max-w-md mx-auto p-6 bg-white rounded shadow space-y-4 text-center relative overflow-hidden">
             <h1 className="text-xl font-bold text-gray-800">📝 Word Guess Game</h1>
 
+            {/* 책 선택 버튼 */}
+            <div className="flex justify-center gap-2 mb-2">
+                <button
+                    onClick={() => setSelectedBook('red')}
+                    className={`px-4 py-2 rounded text-xs ${
+                        selectedBook === 'red' ? 'bg-red-600 text-white' : 'bg-gray-200'
+                    }`}
+                >
+                    Red Book
+                </button>
+                <button
+                    onClick={() => setSelectedBook('purple')}
+                    className={`px-4 py-2 rounded text-xs ${
+                        selectedBook === 'purple' ? 'bg-purple-600 text-white' : 'bg-gray-200'
+                    }`}
+                >
+                    Purple Book
+                </button>
+            </div>
             {/* 유닛 선택 버튼 */}
             {/* 유닛 선택 버튼 */}
-            <div className="flex justify-center flex-wrap gap-2 mb-2">
+            {/* 유닛 선택 버튼 (가로 스크롤) */}
+            <div
+                className="flex overflow-x-scroll whitespace-nowrap gap-2 mb-2 px-2 scroll-smooth"
+                style={{
+                    scrollbarWidth: 'auto', // Firefox
+                    msOverflowStyle: 'auto' // IE/Edge
+                }}
+            >
                 {unitList.map((unit, index) => (
                     <button
                         key={unit.name}
                         onClick={() => handleSelectUnit(index)}
-                        className={`w-20 h-10 rounded border text-sm font-semibold
-                        ${index === selectedUnitIndex ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-800'}
-                    `}
+                        className={`inline-block w-24 h-10 rounded border text-sm font-semibold shrink-0
+        ${index === selectedUnitIndex ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-800'}
+      `}
                     >
                         {unit.name}
                     </button>
                 ))}
             </div>
+
             <hr className="border-t border-gray-300 mb-2" />
             <div className="text-xs text-gray-500 mb-2">{currentUnit.words.length} words</div>
             {/* 단어 index 선택 */}
@@ -304,27 +490,42 @@ export default function WordGuessPage() {
             {/* 단어 뜻 */}
             <p className="text-gray-600 italic mt-2">{currentWordObject.meaning || '(No meaning yet)'}</p>
 
-            {/* 정답 칸 */}
-            <div className="flex justify-center space-x-1 mt-2">
-                {answerArray.map((_, index) => (
-                    <span key={index} className="w-6 h-8 border-b-2 border-gray-400 text-center text-lg">
-                        {currentGuess[index] || ''}
-                    </span>
-                ))}
+            {/* 화살표 */}
+            <div className="flex justify-between mt-4">
+                <button onClick={handlePrevWord} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
+                    ←
+                </button>
+                {/* 정답 칸 */}
+                <div className="flex justify-center space-x-1 mt-2">
+                    {answerArray.map((letter, index) => (
+                        <span key={index} className="w-6 h-8 border-b-2 border-gray-400 text-center text-lg">
+                            {showHint ? letter : currentGuess[index] || ''}
+                        </span>
+                    ))}
+                </div>
+                <button onClick={handleNextWord} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
+                    →
+                </button>
             </div>
-
             {/* 알파벳 버튼 */}
             <div className="flex justify-center flex-wrap gap-2 mt-4">
                 {shuffledLetters.map((letter, idx) => (
                     <button
                         key={`${letter}-${idx}`}
                         onClick={() => handleLetterClick(letter, idx)}
-                        className={`rounded px-3 py-2 transition-colors ${
-                            shakeIndex === idx
-                                ? 'animate-shake-fast bg-red-600'
-                                : 'bg-blue-600 hover:bg-blue-700 text-white'
-                        }`}
-                        disabled={completed}
+                        disabled={clickedLetters.includes(letter) || completed}
+                        className={`
+                                    relative rounded-full w-12 h-12 text-lg transition
+                                    ${
+                                        clickedLetters.includes(letter)
+                                            ? 'bg-gray-400 cursor-not-allowed btn-x'
+                                            : wrongLetter === letter
+                                            ? 'bg-red-600 text-white'
+                                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                                    }
+                                    ${shakeIndex === idx ? 'animate-shake-fast' : ''}
+                                    ${clickedLetters.includes(letter) && !completed ? 'animate-bling' : ''}
+                                    `}
                     >
                         {letter}
                     </button>
@@ -354,20 +555,20 @@ export default function WordGuessPage() {
                 </div>
             )}
 
-            {/* 화살표 */}
-            <div className="flex justify-between mt-4">
-                <button onClick={handlePrevWord} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
-                    ←
+            <div className="flex justify-center gap-4 mt-4">
+                <button onClick={handleReset} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    Again
                 </button>
-                <button onClick={handleNextWord} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
-                    →
+                <button
+                    onClick={() => {
+                        setShowHint(true);
+                        setTimeout(() => setShowHint(false), 2000);
+                    }}
+                    className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500"
+                >
+                    Hint
                 </button>
             </div>
-
-            <button onClick={handleReset} className="mt-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                Again
-            </button>
-
             {/* CSS */}
             <style jsx>{`
                 .animate-shake-fast {
@@ -396,6 +597,41 @@ export default function WordGuessPage() {
                 .animate-pop {
                     animation: pop 1s ease-in-out forwards;
                 }
+                @keyframes bling {
+                    0% {
+                        background-color: yellow;
+                    }
+                    50% {
+                        background-color: white;
+                    }
+                    100% {
+                        background-color: yellow;
+                    }
+                }
+                .animate-bling {
+                    animation: bling 0.5s ease;
+                }
+                .btn-strike::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    height: 2px;
+                    width: 100%;
+                    background-color: black;
+                    transform: translateY(-50%);
+                }
+
+                .btn-x::after {
+                    content: '✕';
+                    position: absolute;
+                    color: black;
+                    font-size: 1.2rem;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+
                 @keyframes pop {
                     0% {
                         opacity: 0;

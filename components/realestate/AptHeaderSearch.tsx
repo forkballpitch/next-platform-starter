@@ -117,7 +117,22 @@ export default function HeaderSearch() {
                 {/* 검색 입력창 */}
                 <div className="flex-1 relative">
                     <input
-                        className="w-full h-9 pl-4 pr-10 rounded-md text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
+                        className="
+                                w-full
+                                h-9
+                                pl-4
+                                pr-10
+                                rounded-md
+                                text-base
+                                text-gray-800
+                                placeholder-gray-400
+                                border
+                                border-orange-300
+                                bg-white
+                                focus:outline-none
+                                focus:ring-2
+                                focus:ring-orange-600
+                                "
                         placeholder=""
                         value={localInput}
                         onChange={(e) => setLocalInput(e.target.value)}
