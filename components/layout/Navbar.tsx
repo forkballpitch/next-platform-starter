@@ -44,7 +44,7 @@ export default function Navbar() {
     return (
         <nav
             className={cn(
-                'h-11 z-[20] border border-b-gray-20 w-full shadow-sm p-4 sm:px-10 flex justify-between items-center align-middle fixed top-0 bg-white',
+                'h-11 z-[20] w-full shadow-sm p-4 sm:px-10 flex justify-between items-center align-middle fixed top-0 bg-orange-500 text-white',
                 {
                     '!h-44': showFilter === true,
                     '!items-start': showFilter === true
@@ -53,7 +53,7 @@ export default function Navbar() {
         >
             <div className="grow basis-0 font-semibold text-lg sm:text-xl text-orange-500 cursor-pointer sm:flex sm:gap-2">
                 {/* <MdPages className="text-4xl my-auto text-gray-500" /> */}
-                <Link href="/" className="my-auto block">
+                <Link href="/" className="my-auto block text-white">
                     PIGGY MOMMY
                 </Link>
             </div>
@@ -209,11 +209,11 @@ export default function Navbar() {
                     onClick={() => setShowMenu((val) => !val)}
                     className="flex align-middle gap-3 rounded-full border border-gray-20 shadow-sm px-4 py-3 my-auto hover:shadow-lg"
                 >
-                    <AiOutlineMenu />
+                    <AiOutlineMenu className="text-white" />
                     {status === 'authenticated' && session?.user?.image ? (
                         <img src={session?.user?.image} alt="profile img" className="rounded-full w-4 h-4 my-auto" />
                     ) : (
-                        <AiOutlineUser />
+                        <AiOutlineUser className="text-white" />
                     )}
                 </button>
                 {showMenu && (

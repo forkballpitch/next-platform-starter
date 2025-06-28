@@ -109,10 +109,22 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export default function WordGuessPage() {
     const [showHint, setShowHint] = useState(false);
+
+    // 사운드 준비
+    const correctSound = useRef<HTMLAudioElement | null>(null);
+    const wrongSound = useRef<HTMLAudioElement | null>(null);
+    const fanfareSound = useRef<HTMLAudioElement | null>(null);
+
+    useEffect(() => {
+        correctSound.current = new Audio('/sounds/correct.mp3');
+        wrongSound.current = new Audio('/sounds/wrong.mp3');
+        fanfareSound.current = new Audio('/sounds/fanfare.mp3');
+    }, []);
+
     const redBookUnitList = [
         {
             name: 'Unit 1',
@@ -328,19 +340,8 @@ export default function WordGuessPage() {
     const [showYoshi, setShowYoshi] = useState(false);
     const [showKoopa, setShowKoopa] = useState(false);
     const [shuffledLetters, setShuffledLetters] = useState<string[]>([]);
-    const currentUnit = unitList[selectedUnitIndex] ?? unitList[0];
-    const currentWordObject = currentUnit?.words?.[currentWordIndex] ?? currentUnit?.words?.[0];
-
-    if (!currentUnit || !currentWordObject) {
-        return <div>Loading...</div>;
-    }
-
-    const currentWord = currentWordObject.word;
-    const answerArray = currentWord.split('');
-
-    const shuffleArray = (array: string[]) => {
-        return [...array].sort(() => Math.random() - 0.5);
-    };
+    const currentUnit = unitList[selectedUnitIndex] ?? null;
+    const currentWordObject = currentUnit?.words?.[currentWordIndex] ?? null;
 
     useEffect(() => {
         setClickedLetters([]);
@@ -364,12 +365,25 @@ export default function WordGuessPage() {
         setShuffledLetters(shuffleArray(firstWord.split('')));
     }, [selectedBook]);
 
+    // if (!currentUnit || !currentWordObject) {
+    //     return <div>Loading...</div>;
+    // }
+
+    const currentWord = currentWordObject.word;
+    const answerArray = currentWord.split('');
+
+    const shuffleArray = (array: string[]) => {
+        return [...array].sort(() => Math.random() - 0.5);
+    };
+
     const handleLetterClick = (letter: string, idx: number) => {
         if (completed) return;
 
         const nextIndex = currentGuess.length;
 
         if (answerArray[nextIndex] === letter) {
+            // 정답 소리
+            correctSound.current?.play();
             const updated = [...currentGuess, letter];
             setCurrentGuess(updated);
             setClickedLetters((prev) => [...prev, letter]);
@@ -378,8 +392,11 @@ export default function WordGuessPage() {
 
             if (updated.length === answerArray.length) {
                 setCompleted(true);
+                fanfareSound.current?.play();
             }
         } else {
+            // 오답 소리
+            wrongSound.current?.play();
             // 틀린 글자 빨간색 표시
             setWrongLetter(letter);
             setShakeIndex(idx);
@@ -423,7 +440,15 @@ export default function WordGuessPage() {
     return (
         <div className="max-w-md mx-auto p-6 bg-white rounded shadow space-y-4 text-center relative overflow-hidden">
             <h1 className="text-xl font-bold text-gray-800">📝 Word Guess Game</h1>
-
+            {!currentUnit || !currentWordObject ? (
+                <div>Loading...</div>
+            ) : (
+                <>
+                    {/* 원래의 JSX 구조 */}
+                    <div>{currentWordObject.word}</div>
+                    {/* etc... */}
+                </>
+            )}
             {/* 책 선택 버튼 */}
             <div className="flex justify-center gap-2 mb-2">
                 <button
