@@ -112,6 +112,7 @@
 import { useState, useEffect } from 'react';
 
 export default function WordGuessPage() {
+    const [showHint, setShowHint] = useState(false);
     const unitList = [
         {
             name: 'Unit 1',
@@ -415,9 +416,9 @@ export default function WordGuessPage() {
 
             {/* 정답 칸 */}
             <div className="flex justify-center space-x-1 mt-2">
-                {answerArray.map((_, index) => (
+                {answerArray.map((letter, index) => (
                     <span key={index} className="w-6 h-8 border-b-2 border-gray-400 text-center text-lg">
-                        {currentGuess[index] || ''}
+                        {showHint ? letter : currentGuess[index] || ''}
                     </span>
                 ))}
             </div>
@@ -476,7 +477,15 @@ export default function WordGuessPage() {
             <button onClick={handleReset} className="mt-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                 Again
             </button>
-
+            <button
+                onClick={() => {
+                    setShowHint(true);
+                    setTimeout(() => setShowHint(false), 1000); // 2초
+                }}
+                className="mt-2 bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500"
+            >
+                Hint
+            </button>
             {/* CSS */}
             <style jsx>{`
                 .animate-shake-fast {
