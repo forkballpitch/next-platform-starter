@@ -118,6 +118,7 @@ export default function WordGuessPage() {
     const correctSound = useRef<HTMLAudioElement | null>(null);
     const wrongSound = useRef<HTMLAudioElement | null>(null);
     const fanfareSound = useRef<HTMLAudioElement | null>(null);
+    const [completedWordCount, setCompletedWordCount] = useState(0);
 
     useEffect(() => {
         correctSound.current = new Audio('/sounds/correct.mp3');
@@ -390,14 +391,12 @@ export default function WordGuessPage() {
             setTimeout(() => setShowYoshi(false), 1000);
 
             if (updated.length === answerArray.length) {
-                if (updated.length === answerArray.length) {
-                    setCompleted(true);
-                    setSolvedCount((prev) => prev + 1); // 맞출 때마다 +1
-                    fanfareSound.current?.play();
-                }
-
+                //  if (updated.length === answerArray.length) {
                 setCompleted(true);
+                setSolvedCount((prev) => prev + 1); // 맞출 때마다 +1
                 fanfareSound.current?.play();
+                setCompletedWordCount((prev) => prev + 1); // 맞춘 단어 카운트 증가
+                //
             }
         } else {
             wrongSound.current?.play();
@@ -433,12 +432,16 @@ export default function WordGuessPage() {
 
     const handleSelectWord = (index: number) => {
         setCurrentWordIndex(index);
+        setCompletedWordCount(0);
     };
 
     const handleSelectUnit = (index: number) => {
         setSelectedUnitIndex(index);
         setCurrentWordIndex(0);
+        setCompletedWordCount(0);
     };
+
+    const imageNumber = selectedUnitIndex * 10 + completedWordCount + 1; // 1부터 시작
 
     const [clickedLetters, setClickedLetters] = useState<{ letter: string; idx: number }[]>([]);
 
@@ -576,14 +579,18 @@ export default function WordGuessPage() {
 
             {/* 피카츄 진행 표시 */}
             <div className="flex justify-center flex-wrap gap-1 mt-4">
-                {Array.from({ length: solvedCount }).map((_, idx) => (
-                    <img
-                        key={idx}
-                        src={`/images/pocketmon/${idx + 1}.png`}
-                        alt={`pikachu ${idx + 1}`}
-                        className="w-12 h-12"
-                    />
-                ))}
+                {Array.from({ length: solvedCount }).map((_, idx) => {
+                    const baseImageNumber = selectedUnitIndex * 10; // 유닛별 시작 번호
+                    const imageNumber = baseImageNumber + idx + 1; // 1부터 시작
+                    return (
+                        <img
+                            key={idx}
+                            src={`/images/pocketmon/${imageNumber}.png`}
+                            alt={`pikachu ${imageNumber}`}
+                            className="w-12 h-12"
+                        />
+                    );
+                })}
             </div>
 
             {/* 요시 Good Job */}
