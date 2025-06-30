@@ -110,6 +110,7 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function WordGuessPage() {
     const [showHint, setShowHint] = useState(false);
@@ -125,6 +126,128 @@ export default function WordGuessPage() {
         wrongSound.current = new Audio('/sounds/wrong.mp3');
         fanfareSound.current = new Audio('/sounds/fanfare.mp3');
     }, []);
+
+    const julyBookUnitList = [
+        {
+            name: 'July Words',
+            words: [
+                { word: 'journey', meaning: 'a trip or travel' },
+                { word: 'January', meaning: 'the first month of the year' },
+                { word: 'snail', meaning: 'a small slow animal with a shell' },
+                { word: 'trail', meaning: 'a path or track' },
+                { word: 'teacher', meaning: 'a person who teaches' },
+                { word: 'February', meaning: 'the second month of the year' },
+                { word: 'wait', meaning: 'stay for a time' },
+                { word: 'wall', meaning: 'a structure that divides space' },
+                { word: 'empty', meaning: 'having nothing inside' },
+                { word: 'March', meaning: 'the third month of the year' },
+                { word: 'chair', meaning: 'something to sit on' },
+                { word: 'see', meaning: 'to look with your eyes' },
+                { word: 'complain', meaning: 'to express dissatisfaction' },
+                { word: 'tidy', meaning: 'neat and clean' },
+                { word: 'April', meaning: 'the fourth month of the year' },
+                { word: 'leaf', meaning: 'part of a plant' },
+                { word: 'May', meaning: 'the fifth month of the year' },
+                { word: 'each', meaning: 'every one' },
+                { word: 'meet', meaning: 'to see and talk with someone' },
+                { word: 'peek', meaning: 'to look quickly' },
+                { word: 'June', meaning: 'the sixth month of the year' },
+                { word: 'thief', meaning: 'a person who steals' },
+                { word: 'treat', meaning: 'to give care or reward' },
+                { word: 'brief', meaning: 'short in time' },
+                { word: 'July', meaning: 'the seventh month of the year' },
+                { word: 'deep', meaning: 'far down' },
+                { word: 'creek', meaning: 'small stream of water' },
+                { word: 'team', meaning: 'group of people' },
+                { word: 'August', meaning: 'the eighth month of the year' },
+                { word: 'keep', meaning: 'to hold or save' },
+                { word: 'toe', meaning: 'part of your foot' },
+                { word: 'toasted', meaning: 'browned by heat' },
+                { word: 'September', meaning: 'the ninth month of the year' },
+                { word: 'window', meaning: 'glass opening in a wall' },
+                { word: 'toad', meaning: 'an amphibian like a frog' },
+                { word: 'snow', meaning: 'frozen water from the sky' },
+                { word: 'October', meaning: 'the tenth month of the year' },
+                { word: 'mad', meaning: 'angry' },
+                { word: 'child', meaning: 'young person' },
+                { word: 'dry', meaning: 'no water or moisture' },
+                { word: 'November', meaning: 'the eleventh month of the year' },
+                { word: 'untie', meaning: 'to loosen a knot' },
+                { word: 'angry', meaning: 'very mad' },
+                { word: 'kind', meaning: 'nice, friendly' },
+                { word: 'December', meaning: 'the twelfth month of the year' },
+                { word: 'furious', meaning: 'extremely angry' },
+                { word: 'high', meaning: 'tall or elevated' },
+                { word: 'sky', meaning: 'where the clouds are' },
+                { word: 'lucky', meaning: 'having good luck' },
+                { word: 'easy', meaning: 'not difficult' },
+                { word: 'healthy', meaning: 'well, not sick' },
+                { word: 'city', meaning: 'large town' },
+                { word: 'valley', meaning: 'low land between hills' },
+                { word: 'alley', meaning: 'narrow street' },
+                { word: 'sunny', meaning: 'full of sunlight' },
+                { word: 'buddy', meaning: 'friend' },
+                { word: 'puppy', meaning: 'young dog' },
+                { word: 'family', meaning: 'parents and children' },
+                { word: 'carry', meaning: 'to hold and move' },
+                { word: 'eight', meaning: 'number 8' },
+                { word: 'brag', meaning: 'to boast' },
+                { word: 'race', meaning: 'a competition to go fast' },
+                { word: 'special', meaning: 'different and important' },
+                { word: 'splendid', meaning: 'very good' },
+                { word: 'sticky', meaning: 'gluey or tacky' },
+                { word: 'danger', meaning: 'risk of harm' },
+                { word: 'escape', meaning: 'to get away' },
+                { word: 'fold', meaning: 'to bend something over' },
+                { word: 'because', meaning: 'reason' },
+                { word: 'cry', meaning: 'to shed tears' },
+                { word: 'small', meaning: 'not big' },
+                { word: 'alone', meaning: 'by oneself' },
+                { word: 'bunch', meaning: 'group together' },
+                { word: 'unsafe', meaning: 'dangerous' },
+                { word: 'whimper', meaning: 'soft cry' },
+                { word: 'busy', meaning: 'having a lot to do' },
+                { word: 'brain', meaning: 'part of your head that thinks' },
+                { word: 'bone', meaning: 'part of skeleton' },
+                { word: 'skin', meaning: 'cover of your body' },
+                { word: 'cut', meaning: 'to slice' },
+                { word: 'heal', meaning: 'to get better' },
+                { word: 'pajamas', meaning: 'sleep clothes' },
+                { word: 'seaweed', meaning: 'ocean plant' },
+                { word: 'ocean', meaning: 'big water area' },
+                { word: 'float', meaning: 'stay on top of water' },
+                { word: 'hold', meaning: 'grip something' },
+                { word: 'relax', meaning: 'rest' },
+                { word: 'nap', meaning: 'short sleep' },
+                { word: 'tradition', meaning: 'custom or habit' },
+                { word: 'temperature', meaning: 'measure of heat' },
+                { word: 'break', meaning: 'to split or crack' },
+                { word: 'understand', meaning: 'to know' },
+                { word: 'luck', meaning: 'chance' },
+                { word: 'die', meaning: 'stop living' },
+                { word: 'donkey', meaning: 'animal like a small horse' },
+                { word: 'spelling', meaning: 'how to write words' },
+                { word: 'alike', meaning: 'similar' },
+                { word: 'ladder', meaning: 'tool to climb up' },
+                { word: 'hose', meaning: 'pipe for water' },
+                { word: 'uniform', meaning: 'special clothes for work or school' },
+                { word: 'protect', meaning: 'to keep safe' },
+                { word: 'visit', meaning: 'to go see someone' },
+                { word: 'wild', meaning: 'not tame' },
+                { word: 'watch', meaning: 'to look at' },
+                { word: 'drought', meaning: 'no rain for a long time' },
+                { word: 'tusk', meaning: 'big tooth of an elephant' },
+                { word: 'trunk', meaning: 'the nose of an elephant' },
+                { word: 'scream', meaning: 'loud cry' },
+                { word: 'apart', meaning: 'not together' },
+                { word: 'invent', meaning: 'make something new' },
+                { word: 'paddle', meaning: 'oar for a boat' },
+                { word: 'railroad', meaning: 'train tracks' },
+                { word: 'wheel', meaning: 'round turning part' },
+                { word: 'harvest', meaning: 'gather crops' }
+            ]
+        }
+    ];
 
     const redBookUnitList = [
         {
@@ -330,8 +453,10 @@ export default function WordGuessPage() {
 
         // ...Unit 3~12도 같은 형식으로 채우면 됩니다.
     ];
-    const [selectedBook, setSelectedBook] = useState<'red' | 'purple'>('red');
-    const unitList = selectedBook === 'red' ? redBookUnitList : purpleBookUnitList;
+    type BookType = 'red' | 'purple' | 'july';
+    const [selectedBook, setSelectedBook] = useState<BookType>('red');
+    const unitList =
+        selectedBook === 'red' ? redBookUnitList : selectedBook === 'purple' ? purpleBookUnitList : julyBookUnitList;
 
     const [selectedUnitIndex, setSelectedUnitIndex] = useState(0);
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -446,8 +571,17 @@ export default function WordGuessPage() {
     const [clickedLetters, setClickedLetters] = useState<{ letter: string; idx: number }[]>([]);
 
     const [wrongLetter, setWrongLetter] = useState<string | null>(null);
+    const router = useRouter();
     return (
         <div className="max-w-md mx-auto p-6 bg-white rounded shadow space-y-4 text-center relative overflow-hidden">
+            {/* 뒤로가기 버튼 */}
+            <button
+                onClick={() => router.back()}
+                className="absolute top-4 left-4 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            >
+                ← 뒤로가기
+            </button>
+
             <h1 className="text-xl font-bold text-gray-800">📝 Word Guess Game</h1>
             {!currentUnit || !currentWordObject ? (
                 <div>Loading...</div>
@@ -476,8 +610,16 @@ export default function WordGuessPage() {
                 >
                     Purple Book
                 </button>
+
+                <button
+                    onClick={() => setSelectedBook('july')}
+                    className={`px-4 py-2 rounded text-xs ${
+                        selectedBook === 'july' ? 'bg-purple-600 text-white' : 'bg-gray-200'
+                    }`}
+                >
+                    July Book
+                </button>
             </div>
-            {/* 유닛 선택 버튼 */}
             {/* 유닛 선택 버튼 */}
             {/* 유닛 선택 버튼 (가로 스크롤) */}
             <div
@@ -503,20 +645,25 @@ export default function WordGuessPage() {
             <hr className="border-t border-gray-300 mb-2" />
             <div className="text-xs text-gray-500 mb-2">{currentUnit.words.length} words</div>
             {/* 단어 index 선택 */}
-            <div className="flex justify-center space-x-1 mb-1">
+            <div
+                className="flex overflow-x-auto whitespace-nowrap gap-1 mb-1 px-2 scroll-smooth"
+                style={{
+                    scrollbarWidth: 'thin', // 파이어폭스
+                    msOverflowStyle: 'auto' // IE/Edge
+                }}
+            >
                 {currentUnit.words.map((_, idx) => (
                     <button
                         key={idx}
                         onClick={() => handleSelectWord(idx)}
-                        className={`w-8 h-8 rounded-full border text-sm ${
-                            currentWordIndex === idx ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
-                        }`}
+                        className={`w-8 h-8 rounded-full border text-sm shrink-0
+                        ${currentWordIndex === idx ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}
+                    `}
                     >
                         {idx + 1}
                     </button>
                 ))}
             </div>
-
             {/* 단어 개수와 구분선 */}
 
             <hr className="border-t border-gray-300 mb-2" />

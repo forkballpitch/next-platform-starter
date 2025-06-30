@@ -50,27 +50,14 @@ export default function RegionSelector() {
         setSelectedGu(gu);
         setSelectedDong('');
         setAptDeals([]);
+        setGuOpen(false); // ✅ 선택 후 닫기
     };
 
-    const handleDongClick = (dongName: string) => {
+    const handleDongClick = async (dongName: string) => {
         setSelectedDong(dongName);
-        setAptDeals([]);
-    };
-
-    const handleGuChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const gu = e.target.value; // ✅
-        setSelectedGu(gu);
-        setSelectedDong('');
-        setAptDeals([]);
-        setGuOpen(false);
-    };
-
-    const handleDongChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const fullName = e.target.value; // ✅
-        setSelectedDong(fullName);
         setDongOpen(false);
 
-        const row = dongList.find((d) => d.locatadd_nm === fullName);
+        const row = dongList.find((d) => d.locatadd_nm === dongName);
         if (!row) return;
 
         const regionCd = row.region_cd;
@@ -102,6 +89,14 @@ export default function RegionSelector() {
         } catch (e) {
             console.error('❌ API 호출 실패:', e);
         }
+    };
+
+    const handleGuChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const gu = e.target.value; // ✅
+        setSelectedGu(gu);
+        setSelectedDong('');
+        setAptDeals([]);
+        setGuOpen(false);
     };
 
     const filteredDongs = dongList.filter((row) => row.locatadd_nm.includes(selectedGu));

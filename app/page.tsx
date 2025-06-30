@@ -130,7 +130,7 @@ export default function HomeScreen() {
     const router = useRouter();
 
     const handleGoToWordGame = () => {
-        router.push('/screen/interest');
+        router.push('/screen/preschool');
     };
 
     const quickMenus = [
@@ -152,7 +152,7 @@ export default function HomeScreen() {
         { icon: <BarChart className="w-6 h-6 text-green-600" />, label: '거래량' },
         {
             icon: <Star className="w-6 h-6 text-orange-500" />,
-            label: '단어게임',
+            label: '공부',
             onClick: handleGoToWordGame
         }
     ];
