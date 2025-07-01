@@ -1587,7 +1587,7 @@ export default function MazeJulyStage() {
                     collected.length === idx
                 ) {
                     setCollected((prev) => [...prev, letter]);
-                    collectSound.current?.play();
+                    // collectSound.current?.play();
                 }
             });
 
