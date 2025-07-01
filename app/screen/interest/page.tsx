@@ -1452,11 +1452,7 @@ export default function MazeJulyStage() {
     const [path, setPath] = useState<{ x: number; y: number }[]>([]);
     const [collected, setCollected] = useState<string[]>([]);
     const [message, setMessage] = useState('');
-    const collectSound = useRef<HTMLAudioElement | null>(null);
 
-    useEffect(() => {
-        collectSound.current = new Audio('/sounds/correct.mp3');
-    }, []);
     // 알파벳 배치
     useEffect(() => {
         const positions: { x: number; y: number; letter: string }[] = [];
@@ -1502,10 +1498,12 @@ export default function MazeJulyStage() {
                 const from = path[i - 1];
                 const to = path[i];
 
-                // 벽이면 skip
-                if (maze.current[from.y][from.x] === 1 || maze.current[to.y][to.x] === 1) continue;
+                let color = 'orange';
+                if (collected.length >= 1) color = 'blue';
+                if (collected.length >= 2) color = 'green';
+                if (collected.length >= currentWord.length) color = 'purple';
 
-                ctx.strokeStyle = 'orange';
+                ctx.strokeStyle = color;
                 ctx.beginPath();
                 ctx.moveTo(from.x * cellSize + cellSize / 2, from.y * cellSize + cellSize / 2);
                 ctx.lineTo(to.x * cellSize + cellSize / 2, to.y * cellSize + cellSize / 2);
@@ -1561,13 +1559,7 @@ export default function MazeJulyStage() {
             if (!isDragging) return;
             e.preventDefault();
             const { cx, cy } = getCoords(e);
-            if (cx < 0 || cy < 0 || cx >= size || cy >= size) return;
-
-            if (maze.current[cy][cx] === 1) {
-                // 벽에 부딪히면 드래그 중단
-                setIsDragging(false);
-                return;
-            }
+            if (cx < 0 || cy < 0 || cx >= size || cy >= size || maze.current[cy][cx] === 1) return;
             if (path.length && path[path.length - 1].x === cx && path[path.length - 1].y === cy) return;
             setPlayer({ x: cx, y: cy });
             setPath((prev) => [...prev, { x: cx, y: cy }]);
@@ -1577,7 +1569,6 @@ export default function MazeJulyStage() {
                 const dist = Math.sqrt((cx - x) ** 2 + (cy - y) ** 2);
                 if (dist <= 1 && collected[idx] !== letter && collected.length === idx) {
                     setCollected((prev) => [...prev, letter]);
-                    collectSound.current?.play(); // 뾰로롱
                 }
             });
 
@@ -1615,6 +1606,7 @@ export default function MazeJulyStage() {
             canvas.removeEventListener('touchend', handleEnd);
         };
     }, [isDragging, player, collected, letters]);
+
     const handleSelectWord = (index: number) => {
         setCurrentWordIndex(index);
         setCollected([]);
