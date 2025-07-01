@@ -1452,7 +1452,11 @@ export default function MazeJulyStage() {
     const [path, setPath] = useState<{ x: number; y: number }[]>([]);
     const [collected, setCollected] = useState<string[]>([]);
     const [message, setMessage] = useState('');
+    const collectSound = useRef<HTMLAudioElement | null>(null);
 
+    useEffect(() => {
+        collectSound.current = new Audio('/sounds/correct.mp3');
+    }, []);
     // 알파벳 배치
     useEffect(() => {
         const positions: { x: number; y: number; letter: string }[] = [];
@@ -1573,6 +1577,7 @@ export default function MazeJulyStage() {
                 const dist = Math.sqrt((cx - x) ** 2 + (cy - y) ** 2);
                 if (dist <= 1 && collected[idx] !== letter && collected.length === idx) {
                     setCollected((prev) => [...prev, letter]);
+                    collectSound.current?.play(); // 뾰로롱
                 }
             });
 
