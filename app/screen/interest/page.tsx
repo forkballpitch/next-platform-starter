@@ -1453,7 +1453,11 @@ export default function MazeJulyStage() {
     const [path, setPath] = useState<{ x: number; y: number }[]>([]);
     const [collected, setCollected] = useState<string[]>([]);
     const [message, setMessage] = useState('');
+    const [wordPage, setWordPage] = useState(0);
+    const wordsPerPage = 5;
+    const totalPages = Math.ceil(wordList.length / wordsPerPage);
 
+    const currentPageWords = wordList.slice(wordPage * wordsPerPage, (wordPage + 1) * wordsPerPage);
     // 알파벳 배치
     useEffect(() => {
         const positions: { x: number; y: number; letter: string }[] = [];
@@ -1638,25 +1642,41 @@ export default function MazeJulyStage() {
 
     return (
         <div className="max-w-md mx-auto p-4">
-            <div
-                className="flex flex-col gap-2 mb-2 px-2"
-                style={{
-                    maxHeight: '200px',
-                    overflowY: 'scroll',
-                    WebkitOverflowScrolling: 'touch'
-                }}
-            >
-                {wordList.map((item, idx) => (
+            <div className="flex flex-col gap-1 mt-2">
+                {currentPageWords.map((item, idx) => (
                     <button
                         key={idx}
-                        onClick={() => handleSelectWord(idx)}
+                        onClick={() => handleSelectWord(wordPage * wordsPerPage + idx)}
                         className={`px-2 py-1 rounded text-xs ${
-                            idx === currentWordIndex ? 'bg-orange-500 text-white' : 'bg-gray-200'
+                            wordPage * wordsPerPage + idx === currentWordIndex
+                                ? 'bg-orange-500 text-white'
+                                : 'bg-gray-200'
                         }`}
                     >
-                        {idx + 1}. {item.meaning}
+                        {wordPage * wordsPerPage + idx + 1}. {item.meaning}
                     </button>
                 ))}
+            </div>
+            <div className="flex justify-center gap-4 mt-2">
+                <button
+                    onClick={() => {
+                        setWordPage((prev) => (prev - 1 + totalPages) % totalPages);
+                    }}
+                    className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                >
+                    ◀️
+                </button>
+                <div className="text-xs text-gray-600">
+                    Page {wordPage + 1} / {totalPages}
+                </div>
+                <button
+                    onClick={() => {
+                        setWordPage((prev) => (prev + 1) % totalPages);
+                    }}
+                    className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                >
+                    ▶️
+                </button>
             </div>
             <h1 className="text-xl font-bold mb-4  text-green-600"> Collected: {collected.join('')}</h1>{' '}
             <canvas ref={canvasRef} width={size * cellSize} height={size * cellSize} className="border" />
