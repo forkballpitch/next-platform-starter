@@ -1438,7 +1438,7 @@ function findPathBFS(maze: number[][], size: number) {
 export default function MazeJulyStage() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const size = 15;
-    const cellSize = 28;
+    const cellSize = 40;
 
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
     const wordList = julyBookUnitList[0].words;
@@ -1521,7 +1521,14 @@ export default function MazeJulyStage() {
         const img = new Image();
         img.src = '/images/pocketmon/5.png';
         img.onload = () => {
-            ctx.drawImage(img, player.x * cellSize, player.y * cellSize, cellSize, cellSize);
+            const scale = 2;
+            ctx.drawImage(
+                img,
+                player.x * cellSize - (cellSize * (scale - 1)) / 2,
+                player.y * cellSize - (cellSize * (scale - 1)) / 2,
+                cellSize * scale,
+                cellSize * scale
+            );
         };
         // 목표
         ctx.fillStyle = 'purple';
