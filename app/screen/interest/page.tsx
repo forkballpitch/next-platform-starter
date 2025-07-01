@@ -1521,7 +1521,7 @@ export default function MazeJulyStage() {
         const img = new Image();
         img.src = '/images/pocketmon/5.png';
         img.onload = () => {
-            const scale = 2;
+            const scale = 2.3;
             ctx.drawImage(
                 img,
                 player.x * cellSize - (cellSize * (scale - 1)) / 2,
