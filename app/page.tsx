@@ -136,16 +136,20 @@ export default function HomeScreen() {
         router.push('/screen/aptMap');
     };
 
+    const handleGoToAcademy = () => {
+        router.push('/screen/academymap');
+    };
+
     const quickMenus = [
         {
             icon: <MapPin className="w-8 h-8 text-gray-500" />,
-            label: '지도로 찾기',
+            label: '실거래지도',
             onClick: handleGoToMap
         },
         {
-            icon: <Star className="w-8 h-8 text-gray-500" />,
-            label: '단어공부',
-            onClick: handleGoToWordGame
+            icon: <MapPin className="w-8 h-8 text-gray-500" />,
+            label: '학원지도',
+            onClick: handleGoToAcademy
         }
     ];
 
@@ -183,15 +187,15 @@ export default function HomeScreen() {
             </div>
 
             {/* 추천 패널 */}
-            <div className="flex items-center justify-between rounded-xl p-3 text-white bg-gradient-to-r from-blue-500 to-purple-500">
+            {/* <div className="flex items-center justify-between rounded-xl p-3 text-white bg-gradient-to-r from-blue-500 to-purple-500">
                 <div className="flex items-center gap-2">
                     <span className="font-semibold">단어공부</span>
                 </div>
                 <span className="text-sm">단어공부하자</span>
-            </div>
+            </div> */}
 
             {/* 아이콘 그리드 */}
-            <div className="grid grid-cols-5 gap-2">
+            {/* <div className="grid grid-cols-5 gap-2">
                 {icons.map((item, idx) => (
                     <div
                         key={idx}
@@ -202,7 +206,7 @@ export default function HomeScreen() {
                         <span className="text-xs mt-1 text-center break-keep">{item.label}</span>
                     </div>
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 }

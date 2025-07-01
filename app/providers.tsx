@@ -42,7 +42,9 @@ export const NextLayout = ({ children }: Props) => {
                 {/* <GoogleAd /> */}
             </div>
             <main className="flex-1 overflow-y-auto">{children}</main>
-            <div className="shrink-0">{/* <Footer /> */}</div>
+            <div className="shrink-0">
+                <Footer />
+            </div>
         </div>
     );
 };

@@ -2,7 +2,6 @@
 
 import { Container as MapDiv, NaverMap, useNavermaps, useMap } from 'react-naver-maps';
 import { useState, useEffect, useRef } from 'react';
-import dealData from '@/data/apt/gangnamDeals.json';
 import guDongData from '@/data/apt/seoulGuDong.json';
 
 interface AptDeal {
@@ -46,7 +45,11 @@ function MarkerCluster({
             setLoading(true);
 
             try {
-                const data = dealData;
+                // 연도별 JSON을 fetch
+                const res = await fetch(`/data/apt/gangnamDeals_${selectedYear}.json`);
+                if (!res.ok) throw new Error(`json load failed: ${res.status}`);
+                const data = await res.json();
+
                 const selectedGuCd = guDongData[selectedGu]?.code;
                 const selectedDongCd = guDongData[selectedGu]?.dongs.find((dong) => dong.name === selectedDong)?.code;
 
@@ -54,7 +57,6 @@ function MarkerCluster({
                     `🔎 조회조건: ${selectedYear}년 ${selectedMonth}월 ${selectedGu}(${selectedGuCd}) ${selectedDong}`
                 );
 
-                // 필터
                 const filtered = data.filter((row: any) => {
                     const matchGu = row.sggCd === selectedGuCd;
                     const matchDong = selectedDong ? row.umdNm === selectedDong : true;
