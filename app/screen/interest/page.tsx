@@ -1258,6 +1258,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+let blockTimeout: NodeJS.Timeout | null = null;
 
 const julyBookUnitList = [
     {
@@ -1546,29 +1547,47 @@ export default function MazeJulyStage() {
             };
         };
 
+        const DRAG_DISTANCE_TOLERANCE = 3; // 칸 수
+
         const handleStart = (e: MouseEvent | TouchEvent) => {
             e.preventDefault();
-            const { cx, cy } = getCoords(e);
-            const dist = Math.sqrt((cx - player.x) ** 2 + (cy - player.y) ** 2);
-            if (dist <= 1) {
-                setIsDragging(true);
-            }
+            setIsDragging(true);
         };
 
         const handleMove = (e: MouseEvent | TouchEvent) => {
             if (!isDragging) return;
+
             e.preventDefault();
             const { cx, cy } = getCoords(e);
-            if (cx < 0 || cy < 0 || cx >= size || cy >= size || maze.current[cy][cx] === 1) return;
+
+            if (cx < 0 || cy < 0 || cx >= size || cy >= size) return;
+
+            // 너무 멀리 벗어나면 멈춤
+            const dist = Math.sqrt((cx - player.x) ** 2 + (cy - player.y) ** 2);
+            if (dist > DRAG_DISTANCE_TOLERANCE) {
+                setIsDragging(false);
+                return;
+            }
+
+            if (maze.current[cy][cx] === 1) {
+                return;
+            }
+
             if (path.length && path[path.length - 1].x === cx && path[path.length - 1].y === cy) return;
+
             setPlayer({ x: cx, y: cy });
             setPath((prev) => [...prev, { x: cx, y: cy }]);
 
             // 알파벳 수집
             letters.forEach(({ x, y, letter }, idx) => {
-                const dist = Math.sqrt((cx - x) ** 2 + (cy - y) ** 2);
-                if (dist <= 1 && collected[idx] !== letter && collected.length === idx) {
+                if (
+                    Math.abs(cx - x) <= 1 &&
+                    Math.abs(cy - y) <= 1 &&
+                    collected[idx] !== letter &&
+                    collected.length === idx
+                ) {
                     setCollected((prev) => [...prev, letter]);
+                    collectSound.current?.play();
                 }
             });
 
@@ -1620,8 +1639,12 @@ export default function MazeJulyStage() {
     return (
         <div className="max-w-md mx-auto p-4">
             <div
-                className="flex flex-col gap-2 mb-2 overflow-y-auto px-2"
-                style={{ maxHeight: '100px' }} // 버튼 리스트 높이 제한
+                className="flex flex-col gap-2 mb-2 px-2"
+                style={{
+                    maxHeight: '200px',
+                    overflowY: 'scroll',
+                    WebkitOverflowScrolling: 'touch'
+                }}
             >
                 {wordList.map((item, idx) => (
                     <button
