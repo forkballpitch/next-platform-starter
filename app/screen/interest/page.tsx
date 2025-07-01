@@ -1498,12 +1498,10 @@ export default function MazeJulyStage() {
                 const from = path[i - 1];
                 const to = path[i];
 
-                let color = 'orange';
-                if (collected.length >= 1) color = 'blue';
-                if (collected.length >= 2) color = 'green';
-                if (collected.length >= currentWord.length) color = 'purple';
+                // 벽이면 skip
+                if (maze.current[from.y][from.x] === 1 || maze.current[to.y][to.x] === 1) continue;
 
-                ctx.strokeStyle = color;
+                ctx.strokeStyle = 'orange';
                 ctx.beginPath();
                 ctx.moveTo(from.x * cellSize + cellSize / 2, from.y * cellSize + cellSize / 2);
                 ctx.lineTo(to.x * cellSize + cellSize / 2, to.y * cellSize + cellSize / 2);
@@ -1559,7 +1557,13 @@ export default function MazeJulyStage() {
             if (!isDragging) return;
             e.preventDefault();
             const { cx, cy } = getCoords(e);
-            if (cx < 0 || cy < 0 || cx >= size || cy >= size || maze.current[cy][cx] === 1) return;
+            if (cx < 0 || cy < 0 || cx >= size || cy >= size) return;
+
+            if (maze.current[cy][cx] === 1) {
+                // 벽에 부딪히면 드래그 중단
+                setIsDragging(false);
+                return;
+            }
             if (path.length && path[path.length - 1].x === cx && path[path.length - 1].y === cy) return;
             setPlayer({ x: cx, y: cy });
             setPath((prev) => [...prev, { x: cx, y: cy }]);
