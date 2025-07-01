@@ -1527,31 +1527,40 @@ export default function MazeJulyStage() {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const handleMouseDown = (e: MouseEvent) => {
+        // 공통 핸들러
+        const getCoords = (e: MouseEvent | TouchEvent) => {
             const rect = canvas.getBoundingClientRect();
-            const mx = e.clientX - rect.left;
-            const my = e.clientY - rect.top;
-            const cx = Math.floor(mx / cellSize);
-            const cy = Math.floor(my / cellSize);
+            let clientX, clientY;
+            if (e instanceof TouchEvent) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = (e as MouseEvent).clientX;
+                clientY = (e as MouseEvent).clientY;
+            }
+            const mx = clientX - rect.left;
+            const my = clientY - rect.top;
+            return {
+                cx: Math.floor(mx / cellSize),
+                cy: Math.floor(my / cellSize)
+            };
+        };
+
+        const handleStart = (e: MouseEvent | TouchEvent) => {
+            e.preventDefault();
+            const { cx, cy } = getCoords(e);
             const dist = Math.sqrt((cx - player.x) ** 2 + (cy - player.y) ** 2);
             if (dist <= 1) {
                 setIsDragging(true);
-                // path 유지
             }
         };
 
-        const handleMouseMove = (e: MouseEvent) => {
+        const handleMove = (e: MouseEvent | TouchEvent) => {
             if (!isDragging) return;
-            const rect = canvas.getBoundingClientRect();
-            const mx = e.clientX - rect.left;
-            const my = e.clientY - rect.top;
-            const cx = Math.floor(mx / cellSize);
-            const cy = Math.floor(my / cellSize);
-
+            e.preventDefault();
+            const { cx, cy } = getCoords(e);
             if (cx < 0 || cy < 0 || cx >= size || cy >= size || maze.current[cy][cx] === 1) return;
-
             if (path.length && path[path.length - 1].x === cx && path[path.length - 1].y === cy) return;
-
             setPlayer({ x: cx, y: cy });
             setPath((prev) => [...prev, { x: cx, y: cy }]);
 
@@ -1566,41 +1575,37 @@ export default function MazeJulyStage() {
             // 도착
             if (cx === size - 2 && cy === size - 2) {
                 if (collected.join('') === currentWord) {
-                    if (currentWordIndex + 1 < wordList.length) {
-                        setMessage(`🎉 Stage cleared! Next word: ${wordList[currentWordIndex + 1].word}`);
-                        setTimeout(() => {
-                            setCurrentWordIndex(currentWordIndex + 1);
-                            setCollected([]);
-                            setPath([]);
-                            setPlayer({ x: 1, y: 1 });
-                            maze.current = generateMaze(size);
-                            solutionPath.current = findPathBFS(maze.current, size);
-                            setMessage('');
-                        }, 2000);
-                    } else {
-                        setMessage(`🎉 All stages cleared!`);
-                    }
+                    setMessage(`🎉 You collected "${currentWord}" and finished!`);
                 } else {
                     setMessage('🚫 Missed some letters!');
                 }
             }
         };
 
-        const handleMouseUp = () => {
+        const handleEnd = () => {
             setIsDragging(false);
         };
 
-        canvas.addEventListener('mousedown', handleMouseDown);
-        canvas.addEventListener('mousemove', handleMouseMove);
-        canvas.addEventListener('mouseup', handleMouseUp);
+        // mouse
+        canvas.addEventListener('mousedown', handleStart);
+        canvas.addEventListener('mousemove', handleMove);
+        canvas.addEventListener('mouseup', handleEnd);
+
+        // touch
+        canvas.addEventListener('touchstart', handleStart);
+        canvas.addEventListener('touchmove', handleMove);
+        canvas.addEventListener('touchend', handleEnd);
 
         return () => {
-            canvas.removeEventListener('mousedown', handleMouseDown);
-            canvas.removeEventListener('mousemove', handleMouseMove);
-            canvas.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, [isDragging, player, collected, currentWordIndex, letters]);
+            canvas.removeEventListener('mousedown', handleStart);
+            canvas.removeEventListener('mousemove', handleMove);
+            canvas.removeEventListener('mouseup', handleEnd);
 
+            canvas.removeEventListener('touchstart', handleStart);
+            canvas.removeEventListener('touchmove', handleMove);
+            canvas.removeEventListener('touchend', handleEnd);
+        };
+    }, [isDragging, player, collected, letters]);
     const handleSelectWord = (index: number) => {
         setCurrentWordIndex(index);
         setCollected([]);
