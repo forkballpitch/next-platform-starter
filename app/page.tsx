@@ -132,12 +132,21 @@ export default function HomeScreen() {
     const handleGoToWordGame = () => {
         router.push('/screen/preschool');
     };
+    const handleGoToMap = () => {
+        router.push('/screen/aptMap');
+    };
 
     const quickMenus = [
-        { icon: <MapPin className="w-8 h-8 text-gray-500" />, label: '지도로 찾기' },
-        { icon: <Search className="w-8 h-8 text-gray-500" />, label: '지역명 검색' },
-        { icon: <Home className="w-8 h-8 text-gray-500" />, label: '분양정보' },
-        { icon: <Heart className="w-8 h-8 text-gray-500" />, label: '관심단지' }
+        {
+            icon: <MapPin className="w-8 h-8 text-gray-500" />,
+            label: '지도로 찾기',
+            onClick: handleGoToMap
+        },
+        {
+            icon: <Star className="w-8 h-8 text-gray-500" />,
+            label: '단어공부',
+            onClick: handleGoToWordGame
+        }
     ];
 
     const icons = [
@@ -164,7 +173,8 @@ export default function HomeScreen() {
                 {quickMenus.map((menu, idx) => (
                     <div
                         key={idx}
-                        className="bg-gray-100 rounded-xl flex flex-col items-center justify-center p-4 shadow"
+                        onClick={menu.onClick}
+                        className="bg-gray-100 rounded-xl flex flex-col items-center justify-center p-4 shadow cursor-pointer hover:bg-gray-200"
                     >
                         {menu.icon}
                         <span className="mt-2 text-sm text-gray-700">{menu.label}</span>
