@@ -3,6 +3,7 @@
 import { Container as MapDiv, NaverMap, useNavermaps, useMap } from 'react-naver-maps';
 import { useState, useEffect, useRef } from 'react';
 import guDongData from '@/data/apt/seoulGuDong.json';
+import { makeMarkerClustering } from './marker-cluster'; // ✅
 
 interface AptDeal {
     apt: string;
@@ -23,49 +24,32 @@ function MarkerCluster({
     selectedYear,
     selectedMonth,
     selectedGu,
-    selectedDong,
-    guDongData
+    selectedDong
 }: {
     setLoading: (loading: boolean) => void;
     selectedYear: string;
     selectedMonth: string;
     selectedGu: string;
     selectedDong: string;
-    guDongData: Record<string, { code: string; dongs: { name: string; code: string }[] }>;
 }) {
     const navermaps = useNavermaps();
     const map = useMap();
-    const markersRef = useRef<any[]>([]);
-    const infoWindowRef = useRef<any>(null);
+    const clusterRef = useRef<any>(null);
+    const currentInfoWindowRef = useRef<any>(null);
 
     useEffect(() => {
         if (!map || !window.naver) return;
 
-        async function fetchDeals() {
+        async function setup() {
             setLoading(true);
 
             try {
-                // 연도별 JSON을 fetch
-                const res = await fetch(`/data/apt/gangnamDeals_${selectedYear}.json`);
-                if (!res.ok) throw new Error(`json load failed: ${res.status}`);
+                const MarkerClustering = makeMarkerClustering(window.naver);
+
+                const res = await fetch(`/data/apt/seoul_${selectedYear}.json`);
                 const data = await res.json();
 
-                const selectedGuCd = guDongData[selectedGu]?.code;
-                const selectedDongCd = guDongData[selectedGu]?.dongs.find((dong) => dong.name === selectedDong)?.code;
-
-                console.log(
-                    `🔎 조회조건: ${selectedYear}년 ${selectedMonth}월 ${selectedGu}(${selectedGuCd}) ${selectedDong}`
-                );
-
-                const filtered = data.filter((row: any) => {
-                    const matchGu = row.sggCd === selectedGuCd;
-                    const matchDong = selectedDong ? row.umdNm === selectedDong : true;
-                    return row.dealYear === selectedYear && row.dealMonth === selectedMonth && matchGu && matchDong;
-                });
-
-                console.log(`✅ 필터링 결과 ${filtered.length}건`);
-
-                const enriched: AptDeal[] = filtered
+                const allDeals: AptDeal[] = data
                     .filter((row: any) => row.latitude && row.longitude)
                     .map((row: any) => ({
                         apt: row.aptNm,
@@ -75,63 +59,90 @@ function MarkerCluster({
                         longitude: row.longitude
                     }));
 
-                // 이전 마커 삭제
-                markersRef.current.forEach((marker) => marker.setMap(null));
-                markersRef.current = [];
+                const coordMap = new Map<string, AptDeal[]>();
 
-                // 새로 찍기
-                enriched.forEach((deal) => {
-                    const pos = new navermaps.LatLng(deal.latitude, deal.longitude);
+                allDeals.forEach((deal) => {
+                    const key = `${deal.latitude},${deal.longitude}`;
+                    if (!coordMap.has(key)) coordMap.set(key, []);
+                    coordMap.get(key)!.push(deal);
+                });
 
-                    const marker = new navermaps.Marker({
-                        position: pos,
-                        icon: {
-                            content: `
-                <div style="
-                  background: #FF8A00;
-                  padding: 6px 8px;
-                  border-radius: 12px;
-                  font-size: 11px;
-                  color: white;
-                  border: 1px solid white;
-                  text-align: center;
-                  line-height: 1.3;
-                  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-                  min-width: 100px;
-                ">
-                  <div style="font-weight: bold;">${deal.apt}</div>
-                  <div>💰 ${deal.amount}만원</div>
-                  <div style="font-size: 10px;">📅 ${deal.date}</div>
-                </div>
-              `,
-                            size: navermaps.Size(100, 60),
-                            anchor: navermaps.Point(50, 60)
-                        },
-                        map
-                    });
+                const markers = Array.from(coordMap.entries()).map(([key, deals]) => {
+                    const [lat, lng] = key.split(',').map(Number);
+                    const pos = new navermaps.LatLng(lat, lng);
+
+                    const marker = new navermaps.Marker({ position: pos });
 
                     navermaps.Event.addListener(marker, 'click', () => {
-                        if (infoWindowRef.current) {
-                            infoWindowRef.current.close();
-                        }
+                        if (currentInfoWindowRef.current) currentInfoWindowRef.current.close();
+                        const html = deals
+                            .map((d) => `${d.date} 💰${d.amount}만원`)
+                            .join('<hr style="margin:4px 0;" />');
+
                         const infoWindow = new navermaps.InfoWindow({
-                            content: `<div style="padding:6px;">🏢 ${deal.apt}<br/>💰 ${deal.amount}만원<br/>📅 ${deal.date}</div>`
+                            content: `
+                <div style="padding:4px; max-height:200px; overflow:auto;">
+                  🏢 <b>${deals[0].apt}</b><br/>
+                  ${html}
+                </div>
+              `
                         });
                         infoWindow.open(map, marker);
-                        infoWindowRef.current = infoWindow;
+                        currentInfoWindowRef.current = infoWindow;
                     });
 
-                    markersRef.current.push(marker);
+                    return marker;
                 });
-            } catch (err) {
-                console.error('❌ 거래 데이터 처리 실패:', err);
+
+                if (clusterRef.current) {
+                    clusterRef.current.clear();
+                    clusterRef.current.setMap(null);
+                    clusterRef.current = null;
+                }
+
+                clusterRef.current = new MarkerClustering({
+                    minClusterSize: 2,
+                    maxZoom: 17,
+                    map,
+                    markers: markers,
+                    disableClickZoom: false,
+                    gridSize: 100,
+                    icons: [
+                        {
+                            content:
+                                '<div style="cursor:pointer;width:40px;height:40px;line-height:40px;font-size:11px;color:white;text-align:center;font-weight:bold;background:#FF8A00;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.3);">{count}</div>',
+                            size: navermaps.Size(40, 40),
+                            anchor: navermaps.Point(20, 20)
+                        }
+                    ],
+                    indexGenerator: [10, 50, 100, 300],
+                    stylingFunction: (clusterMarker, count) => {
+                        clusterMarker.getElement().querySelector('div')!.innerText = count;
+                    },
+                    onClusterClick: (cluster, event) => {
+                        const pos = cluster.getCenter();
+                        const nextZoom = Math.min(map.getZoom() + 2, 18);
+                        map.setZoom(nextZoom, true);
+                        map.panTo(pos);
+                    }
+                });
+            } catch (e) {
+                console.error('❌ 데이터 로드 실패', e);
             } finally {
                 setLoading(false);
             }
         }
 
-        fetchDeals();
-    }, [map, selectedGu, selectedDong, selectedYear, selectedMonth, guDongData]);
+        setup();
+
+        return () => {
+            if (clusterRef.current) {
+                clusterRef.current.clear();
+                clusterRef.current.setMap(null);
+                clusterRef.current = null;
+            }
+        };
+    }, [map, selectedYear]);
 
     return null;
 }
@@ -164,8 +175,7 @@ function NaverMapsMarkerCluster() {
                 (pos) => {
                     setCenter(new navermaps.LatLng(pos.coords.latitude, pos.coords.longitude));
                 },
-                (err) => {
-                    console.warn('위치 접근 실패:', err);
+                () => {
                     setCenter(new navermaps.LatLng(37.498095, 127.051572));
                 }
             );
@@ -193,7 +203,6 @@ function NaverMapsMarkerCluster() {
                     selectedMonth={selectedMonth}
                     selectedGu={selectedGu}
                     selectedDong={selectedDong}
-                    guDongData={guDongData}
                 />
             </NaverMap>
 
