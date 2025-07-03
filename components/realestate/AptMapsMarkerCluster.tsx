@@ -137,7 +137,6 @@ function MarkerCluster({
 
         return () => {
             if (clusterRef.current) {
-                clusterRef.current.clear();
                 clusterRef.current.setMap(null);
                 clusterRef.current = null;
             }
