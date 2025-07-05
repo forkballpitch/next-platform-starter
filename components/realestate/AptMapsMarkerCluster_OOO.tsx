@@ -4,10 +4,6 @@ import { Container as MapDiv, NaverMap, useNavermaps, useMap } from 'react-naver
 import { useState, useEffect, useRef } from 'react';
 import guDongData from '@/data/apt/seoulGuDong.json';
 import { makeMarkerClustering } from './marker-cluster'; // ✅
-import * as turf from '@turf/turf';
-import regions from '@/data/apt/regions.json'; // 서울 경계 GeoJSON
-import incheonjson from '@/data/apt/incheon.json';
-import gyeonggijson from '@/data/apt/gyeonggi.json';
 
 interface AptDeal {
     apt: string;
@@ -28,78 +24,20 @@ function MarkerCluster({
     selectedYear,
     selectedMonth,
     selectedGu,
-    selectedDong,
-    selectedArea,
-    setSelectedArea
+    selectedDong
 }: {
     setLoading: (loading: boolean) => void;
     selectedYear: string;
     selectedMonth: string;
     selectedGu: string;
     selectedDong: string;
-    selectedArea: string;
-    setSelectedArea: (area: string) => void;
 }) {
     const navermaps = useNavermaps();
     const map = useMap();
     const clusterRef = useRef<any>(null);
     const currentInfoWindowRef = useRef<any>(null);
 
-    // ✅ 컴포넌트 내부에 그대로
-    function isPointInBounds(lat: number, lng: number, sw: any, ne: any) {
-        return lat >= sw.lat() && lat <= ne.lat() && lng >= sw.lng() && lng <= ne.lng();
-    }
-
     useEffect(() => {
-        if (!map) return;
-
-        navermaps.Event.addListener(map, 'center_changed', () => {
-            const bounds = map.getBounds();
-            const sw = bounds.getSW();
-            const ne = bounds.getNE();
-
-            const viewPortPolygon = turf.bboxPolygon([sw.lng(), sw.lat(), ne.lng(), ne.lat()]);
-            // console.log(`========================`);
-            regions[0].features.forEach((region) => {
-                const polygon = turf.polygon(region.geometry.coordinates);
-                const intersects = turf.booleanIntersects(viewPortPolygon, polygon);
-                //  console.log(`${region.properties.name} 교차? ${intersects}`);
-                //   console.log(selectedArea);
-                setSelectedArea('incheon'); // 임시로 인천으로 설정, 실제로는 선택된 지역에 따라 변경됨
-            });
-            // console.log(`========================`);
-
-            //   const bounds = map.getBounds();
-            //   const sw = bounds.getSW();
-            //   const ne = bounds.getNE();
-
-            //   const viewPortPolygon = turf.bboxPolygon([sw.lng(), sw.lat(), ne.lng(), ne.lat()]);
-
-            //   const areas = [
-            //       { name: 'seoul', geojson: regions },
-            //       { name: 'incheon', geojson: incheonjson },
-            //       { name: 'gyeonggi', geojson: gyeonggijson }
-            //   ];
-
-            //   for (const area of areas) {
-            //       const feature = area.geojson.features?.[0];
-            //       if (!feature) continue;
-
-            //       const polygon = turf.polygon(feature.geometry.coordinates);
-            //       const intersects = turf.booleanIntersects(viewPortPolygon, polygon);
-
-            //       console.log(`${area.name} 교차 여부: ${intersects}`);
-
-            //       if (intersects) {
-            //           setSelectedArea(area.name);
-            //           break; // 첫번째 교차만 반영
-            //       }
-            //   }
-        });
-    }, [map, selectedArea]);
-
-    useEffect(() => {
-        console.log('📍 선택된 지역:', selectedArea);
         if (!map || !window.naver) return;
 
         async function setup() {
@@ -107,10 +45,8 @@ function MarkerCluster({
 
             try {
                 const MarkerClustering = makeMarkerClustering(window.naver);
-                // selectedArea = 'incheon'; // 임시로 인천으로 설정, 실제로는 선택된 지역에 따라 변경됨
-                // const res = await fetch(`/data/apt/seoul/seoul_${selectedYear}.json`);
-                const res = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
-                console.log('🔗 API URL:', res.url);
+
+                const res = await fetch(`/data/apt/seoul_${selectedYear}.json`);
                 const data = await res.json();
 
                 const allDeals: AptDeal[] = data
@@ -205,7 +141,7 @@ function MarkerCluster({
                 clusterRef.current = null;
             }
         };
-    }, [map, selectedYear, selectedArea]);
+    }, [map, selectedYear]);
 
     return null;
 }
@@ -224,41 +160,8 @@ function NaverMapsMarkerCluster() {
     const [selectedGu, setSelectedGu] = useState('강남구');
     const [selectedDong, setSelectedDong] = useState('');
     const [dongList, setDongList] = useState<{ name: string; code: string }[]>([]);
-    const [selectedArea, setSelectedArea] = useState('seoul');
 
     const guList = Object.keys(guDongData);
-
-    const areaConfigs = [
-        {
-            name: 'seoul',
-            center: { lat: 37.5665, lng: 126.978 },
-            radiusKm: 20 // 더 좁게
-        },
-        {
-            name: 'incheon',
-            center: { lat: 37.4563, lng: 126.7052 },
-            radiusKm: 20
-        },
-        {
-            name: 'gyeonggi',
-            center: { lat: 37.2752, lng: 127.0095 },
-            radiusKm: 20
-        }
-    ];
-
-    function haversine(lat1: number, lng1: number, lat2: number, lng2: number) {
-        const R = 6371; // km
-        const dLat = ((lat2 - lat1) * Math.PI) / 180;
-        const dLon = ((lng2 - lng1) * Math.PI) / 180;
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos((lat1 * Math.PI) / 180) *
-                Math.cos((lat2 * Math.PI) / 180) *
-                Math.sin(dLon / 2) *
-                Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    }
 
     useEffect(() => {
         setDongList(guDongData[selectedGu]?.dongs ?? []);
@@ -292,26 +195,6 @@ function NaverMapsMarkerCluster() {
                     position: navermaps.Position.TOP_LEFT,
                     style: navermaps.ZoomControlStyle.SMALL
                 }}
-                onCenterChanged={(map) => {
-                    //console.log('🗺️ 지도 중심 변경됨:', map);
-                    // console.log('🗺️ 지도 이동됨:', map.x);
-                    // // 네이버 reverse geocoding API 호출
-                    // fetch(`/api/geo?lat=${map._lat}&lng=${map._lng}`)
-                    //     .then((res) => res.json())
-                    //     .then((data) => {
-                    //         // console.log('📍 역지오코딩 응답:', data);
-                    //         const area1 = data.results?.[0]?.region?.area1?.name;
-                    //         const area2 = data.results?.[0]?.region?.area2?.name;
-                    //         const area3 = data.results?.[0]?.region?.area3?.name;
-                    //         console.log(`➡️ 현재 위치는 ${area1 ?? ''} ${area2 ?? ''} ${area3 ?? ''}`);
-                    //         // const area1 = data.results?.[0]?.region?.area1?.name;
-                    //         // setSelectedArea('incheon');
-                    //     })
-                    //     .catch((err) => console.error('역지오코딩 오류', err));
-                }}
-                onZoomChanged={(map) => {
-                    // console.log('🔍 줌 변경됨: zoom =', map.getZoom());
-                }}
             >
                 <MarkerCluster
                     setLoading={setLoading}
@@ -319,8 +202,6 @@ function NaverMapsMarkerCluster() {
                     selectedMonth={selectedMonth}
                     selectedGu={selectedGu}
                     selectedDong={selectedDong}
-                    selectedArea={selectedArea}
-                    setSelectedArea={setSelectedArea}
                 />
             </NaverMap>
 

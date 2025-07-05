@@ -4,7 +4,7 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import SearchContext from './SearchContext';
 import academyData from '@/data/academy/seoulAcademyWithCoords.json';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Search } from 'lucide-react';
+import { Home, MapPin, Search } from 'lucide-react';
 import { getCoordinates } from '@/app/lib/getCoordinates';
 import { fetchPlaceByName } from '@/app/lib/fetchPlaceByName';
 const data = academyData as Array<{ ACA_NM: string; [key: string]: any }>;
@@ -103,21 +103,21 @@ export default function HeaderSearch() {
                 <div className="flex-1 relative">
                     <input
                         className="
-                                w-full
-                                h-9
-                                pl-4
-                                pr-10
-                                rounded-md
-                                text-base
-                                text-gray-800
-                                placeholder-gray-400
-                                border
-                                border-orange-300
-                                bg-white
-                                focus:outline-none
-                                focus:ring-2
-                                focus:ring-orange-600
-                                "
+                    w-full
+                    h-9
+                    pl-4
+                    pr-10
+                    rounded-md
+                    text-base
+                    text-gray-800
+                    placeholder-gray-400
+                    border
+                    border-orange-300
+                    bg-white
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-orange-600
+                "
                         placeholder="학원명을 입력하세요"
                         value={localInput}
                         onChange={(e) => setLocalInput(e.target.value)}
@@ -130,6 +130,7 @@ export default function HeaderSearch() {
                         <Search className="w-4 h-4" />
                     </button>
 
+                    {/* 추천목록 */}
                     {suggestions.length > 0 && (
                         <ul className="absolute w-full bg-white border text-gray-800 rounded shadow mt-1 max-h-40 overflow-y-auto z-50">
                             {suggestions.map((name, idx) => (
@@ -157,6 +158,7 @@ export default function HeaderSearch() {
                         </ul>
                     )}
 
+                    {/* 팝업 */}
                     {showPopup && searchResults.length > 0 && (
                         <ul className="absolute w-full bg-white border rounded shadow mt-1 max-h-48 overflow-y-auto z-50 text-gray-800">
                             {searchResults.map((place, idx) => (
@@ -172,6 +174,15 @@ export default function HeaderSearch() {
                         </ul>
                     )}
                 </div>
+
+                {/* 학원지도 버튼 */}
+                <button
+                    onClick={() => router.push('/screen/aptMap')}
+                    className="text-white hover:text-yellow-200 transition-colors p-1"
+                    aria-label="학원 지도"
+                >
+                    <MapPin className="w-6 h-6" />
+                </button>
             </header>
         </div>
     );

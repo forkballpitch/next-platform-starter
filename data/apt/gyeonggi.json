@@ -1,0 +1,23 @@
+[
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": { "name": "Gyeonggi" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [126.6, 37.0],
+                            [126.6, 38.3],
+                            [127.8, 38.3],
+                            [127.8, 37.0],
+                            [126.6, 37.0]
+                        ]
+                    ]
+                }
+            }
+        ]
+    }
+]

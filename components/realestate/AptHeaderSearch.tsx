@@ -3,7 +3,7 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import SearchContext from '../academy/SearchContext';
 import academyData from '@/data/academy/seoulAcademyWithCoords.json';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Search } from 'lucide-react';
+import { Home, MapIcon, Search } from 'lucide-react';
 import { getCoordinates } from '@/app/lib/getCoordinates';
 import { fetchPlaceByName } from '@/app/lib/fetchPlaceByName';
 const data = academyData as Array<{ ACA_NM: string; [key: string]: any }>;
@@ -106,38 +106,39 @@ export default function HeaderSearch() {
     return (
         <div ref={wrapperRef} className="fixed top-0 left-0 right-0 z-50 bg-orange-500 px-4 py-1 shadow-md">
             <header className="flex items-center gap-3">
-                {/* 홈 아이콘 */}
-                <button
-                    onClick={() => router.push('/')}
-                    className="text-white hover:text-yellow-200 transition-colors p-1"
-                >
-                    <Home className="w-6 h-6" />
-                </button>
+                {/* 홈 버튼 */}
+                <div className="w-10 flex-shrink-0 flex justify-center">
+                    <button
+                        onClick={() => router.push('/')}
+                        className="text-white hover:text-yellow-200 transition-colors p-1"
+                    >
+                        <Home className="w-6 h-6" />
+                    </button>
+                </div>
 
-                {/* 검색 입력창 */}
-                <div className="flex-1 relative">
+                {/* 검색창 */}
+                <div className="flex-1 relative min-w-0">
                     <input
                         className="
-                                w-full
-                                h-9
-                                pl-4
-                                pr-10
-                                rounded-md
-                                text-base
-                                text-gray-800
-                                placeholder-gray-400
-                                border
-                                border-orange-300
-                                bg-white
-                                focus:outline-none
-                                focus:ring-2
-                                focus:ring-orange-600
-                                "
+                w-full
+                h-9
+                pl-4
+                pr-10
+                rounded-md
+                text-base
+                text-gray-800
+                placeholder-gray-400
+                border
+                border-orange-300
+                bg-white
+                focus:outline-none
+                focus:ring-2
+                focus:ring-orange-600
+            "
                         placeholder=""
                         value={localInput}
                         onChange={(e) => setLocalInput(e.target.value)}
                     />
-                    {/* 🔍 input 내부 아이콘 */}
                     <button
                         onClick={handleSearch}
                         className="absolute right-2 top-1/2 -translate-y-1/2 text-orange-500 hover:text-orange-700"
@@ -146,6 +147,7 @@ export default function HeaderSearch() {
                         <Search className="w-4 h-4" />
                     </button>
 
+                    {/* suggestions */}
                     {suggestions.length > 0 && (
                         <ul className="absolute w-full bg-white border text-black rounded shadow mt-1 max-h-40 overflow-y-auto z-50">
                             {suggestions.map((name, idx) => (
@@ -173,7 +175,6 @@ export default function HeaderSearch() {
                         </ul>
                     )}
 
-                    {/* ✅ 장소 선택 팝업 */}
                     {showPopup && searchResults.length > 0 && (
                         <ul className="absolute w-full bg-white border rounded shadow mt-1 max-h-48 overflow-y-auto z-50">
                             {searchResults.map((place, idx) => (
@@ -188,6 +189,18 @@ export default function HeaderSearch() {
                             ))}
                         </ul>
                     )}
+                </div>
+
+                {/* 학원지도 버튼 */}
+                <div className="w-10 flex-shrink-0 flex justify-center">
+                    <button
+                        onClick={() => router.push('/screen/academymap')}
+                        className="text-white hover:text-yellow-200 transition-colors p-1"
+                        aria-label="학원 지도"
+                    >
+                        {' '}
+                        <MapIcon className="w-6 h-6" />
+                    </button>
                 </div>
             </header>
         </div>

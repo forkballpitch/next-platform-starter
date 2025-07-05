@@ -12,6 +12,7 @@
     "dependencies": {
         "@heroicons/react": "^2.2.0",
         "@netlify/blobs": "^8.0.1",
+        "@turf/turf": "^7.2.0",
         "axios": "^1.10.0",
         "blobshape": "^1.0.0",
         "bright": "^0.8.5",

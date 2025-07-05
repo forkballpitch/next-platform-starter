@@ -1,0 +1,23 @@
+[
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": { "name": "Incheon" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [126.4, 37.3],
+                            [126.4, 37.6],
+                            [126.9, 37.6],
+                            [126.9, 37.3],
+                            [126.4, 37.3]
+                        ]
+                    ]
+                }
+            }
+        ]
+    }
+]
