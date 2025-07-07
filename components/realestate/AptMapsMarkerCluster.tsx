@@ -54,6 +54,7 @@ function MarkerCluster({
         if (!map) return;
 
         navermaps.Event.addListener(map, 'center_changed', () => {
+            console.log('🗺️ 지도 중심 변경됨:', map.getCenter());
             const bounds = map.getBounds();
             const sw = bounds.getSW();
             const ne = bounds.getNE();
@@ -65,7 +66,7 @@ function MarkerCluster({
                 const intersects = turf.booleanIntersects(viewPortPolygon, polygon);
                 //  console.log(`${region.properties.name} 교차? ${intersects}`);
                 //   console.log(selectedArea);
-                setSelectedArea('incheon'); // 임시로 인천으로 설정, 실제로는 선택된 지역에 따라 변경됨
+                setSelectedArea('seoul'); // 임시로 인천으로 설정, 실제로는 선택된 지역에 따라 변경됨
             });
             // console.log(`========================`);
 
@@ -109,7 +110,26 @@ function MarkerCluster({
                 const MarkerClustering = makeMarkerClustering(window.naver);
                 // selectedArea = 'incheon'; // 임시로 인천으로 설정, 실제로는 선택된 지역에 따라 변경됨
                 // const res = await fetch(`/data/apt/seoul/seoul_${selectedYear}.json`);
-                const res = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
+
+                const now = new Date();
+                const currentYear = String(now.getFullYear());
+                const currentMonth = String(now.getMonth() + 1); // JS 월 +1
+
+                let res;
+
+                if (selectedYear === currentYear && selectedMonth === currentMonth) {
+                    // if (true) {
+                    // 현재 달은 API
+                    // res = await fetch(`/api/apt?year=${selectedYear}&month=${selectedMonth}&gu=${selectedGu}`);
+                    //임시
+                    res = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
+                } else {
+                    // 과거 달은 기존 JSON
+                    console.log(selectedArea, selectedYear);
+                    res = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
+                }
+
+                // const res = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
                 console.log('🔗 API URL:', res.url);
                 const data = await res.json();
 
@@ -205,7 +225,7 @@ function MarkerCluster({
                 clusterRef.current = null;
             }
         };
-    }, [map, selectedYear, selectedArea]);
+    }, [map, selectedYear, selectedMonth, selectedArea]);
 
     return null;
 }
