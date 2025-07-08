@@ -15,6 +15,9 @@ interface AptDeal {
     amount: string;
     latitude: number;
     longitude: number;
+    excluUseAr?: string; // 전용면적 (옵셔널)
+    floor?: string; // 층수 (옵셔널)
+    address?: string; // 주소도 같이 쓸 경우
 }
 
 declare global {
@@ -49,6 +52,44 @@ function MarkerCluster({
     function isPointInBounds(lat: number, lng: number, sw: any, ne: any) {
         return lat >= sw.lat() && lat <= ne.lat() && lng >= sw.lng() && lng <= ne.lng();
     }
+
+    //경계 그리기
+    // useEffect(() => {
+    //     if (!map || !window.naver) return;
+    //     console.log('🗺️ 지도 경계 그리기 시작');
+    //     async function drawDongBoundaries() {
+    //         const res = await fetch('/data/apt/regions/regions.json'); // 경계 geojson
+
+    //         const geoArray = await res.json();
+    //         const geo = geoArray[0]; // FeatureCollection
+
+    //         if (!geo || !geo.features) {
+    //             console.error('❌ GeoJSON 구조 오류', geo);
+    //             return;
+    //         }
+
+    //         geo.features.forEach((feature: any) => {
+    //             const coordinates = feature.geometry.coordinates;
+    //             const dongName = feature.properties.name;
+
+    //             coordinates.forEach((linearRing: number[][]) => {
+    //                 // linearRing: [ [lng, lat], [lng, lat], ... ]
+    //                 const path = linearRing.map(([lng, lat]) => new navermaps.LatLng(lat, lng));
+    //                 new navermaps.Polygon({
+    //                     map,
+    //                     paths: path,
+    //                     strokeColor: '#FF0000',
+    //                     strokeOpacity: 0.8,
+    //                     strokeWeight: 2,
+    //                     fillColor: '#FF0000',
+    //                     fillOpacity: 0.1
+    //                 });
+    //             });
+    //         });
+    //     }
+
+    //     drawDongBoundaries();
+    // }, [map]);
 
     useEffect(() => {
         if (!map) return;
@@ -120,9 +161,9 @@ function MarkerCluster({
                 if (selectedYear === currentYear && selectedMonth === currentMonth) {
                     // if (true) {
                     // 현재 달은 API
-                    // res = await fetch(`/api/apt?year=${selectedYear}&month=${selectedMonth}&gu=${selectedGu}`);
+                    res = await fetch(`/api/apt?year=${selectedYear}&month=${selectedMonth}&gu=${selectedGu}`);
                     //임시
-                    res = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
+                    // res = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
                 } else {
                     // 과거 달은 기존 JSON
                     console.log(selectedArea, selectedYear);
@@ -140,7 +181,10 @@ function MarkerCluster({
                         date: `${row.dealYear}-${row.dealMonth}-${row.dealDay}`,
                         amount: row.dealAmount,
                         latitude: row.latitude,
-                        longitude: row.longitude
+                        longitude: row.longitude,
+                        excluUseAr: row.excluUseAr,
+                        floor: row.floor,
+                        address: row.address
                     }));
 
                 const coordMap = new Map<string, AptDeal[]>();
@@ -151,31 +195,95 @@ function MarkerCluster({
                     coordMap.get(key)!.push(deal);
                 });
 
+                //마커를 지도에 표시
                 const markers = Array.from(coordMap.entries()).map(([key, deals]) => {
                     const [lat, lng] = key.split(',').map(Number);
                     const pos = new navermaps.LatLng(lat, lng);
 
-                    const marker = new navermaps.Marker({ position: pos });
+                    const marker = new navermaps.Marker({
+                        position: pos,
+                        icon: {
+                            content: `
+                                        <div style="
+                                            position: relative;
+                                            background: #FF8A00;
+                                            color: white;
+                                            padding: 4px 8px;
+                                            border-radius: 4px;
+                                            font-size: 11px;
+                                            white-space: nowrap;
+                                            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+                                        ">
+                                            ${deals[0].apt}
+                                            <div style="
+                                                position: absolute;
+                                                bottom: -16px;    /* 꼬리 위치 */
+                                                left: 50%;
+                                                transform: translateX(-50%);
+                                                width: 0;
+                                                height: 0;
+                                                border-left: 5px solid transparent;
+                                                border-right: 5px solid transparent;
+                                                border-top: 16px solid #FF8A00;  /* 꼬리 길이 */
+                                            "></div>
+                                        </div>
+                                    `,
+                            size: navermaps.Size(100, 40),
+                            anchor: navermaps.Point(50, 20)
+                        }
+                    });
 
                     navermaps.Event.addListener(marker, 'click', () => {
                         if (currentInfoWindowRef.current) currentInfoWindowRef.current.close();
-                        const html = deals
-                            .map((d) => `${d.date} 💰${d.amount}만원`)
+
+                        // 날짜 내림차순 정렬
+                        const sortedDeals = [...deals].sort((a, b) => {
+                            const aDate = new Date(a.date);
+                            const bDate = new Date(b.date);
+                            return bDate.getTime() - aDate.getTime();
+                        });
+
+                        const html = sortedDeals
+                            .map((d) => {
+                                const amount = Number(d.amount.replace(/,/g, ''));
+                                const eok = Math.floor(amount / 10000);
+                                const man = amount % 10000;
+
+                                const amountStr =
+                                    eok > 0
+                                        ? `${eok}억${man > 0 ? ' ' + man.toLocaleString() + '만원' : ''}`
+                                        : `${man.toLocaleString()}만원`;
+
+                                return `
+                                            ${d.date} 💰${amountStr}<br/>
+                                            전용면적: ${d.excluUseAr ?? '미상'}㎡<br/>
+                                            층수: ${d.floor ?? '미상'}층
+                                        `;
+                            })
                             .join('<hr style="margin:4px 0;" />');
 
                         const infoWindow = new navermaps.InfoWindow({
                             content: `
-                <div style="padding:4px; max-height:200px; overflow:auto;">
-                  🏢 <b>${deals[0].apt}</b><br/>
-                  ${html}
-                </div>
-              `
+                                        <div style="padding:4px; max-height:200px; overflow:auto;">
+                                            🏢 <b>${deals[0].apt}</b><br/>
+                                            📍 ${deals[0].address}<br/>
+                                            ${html}
+                                        </div>
+                                    `
                         });
                         infoWindow.open(map, marker);
                         currentInfoWindowRef.current = infoWindow;
                     });
 
                     return marker;
+                });
+
+                // ✅ 지도 클릭 시 InfoWindow 닫기
+                navermaps.Event.addListener(map, 'click', () => {
+                    if (currentInfoWindowRef.current) {
+                        currentInfoWindowRef.current.close();
+                        currentInfoWindowRef.current = null;
+                    }
                 });
 
                 if (clusterRef.current) {

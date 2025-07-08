@@ -11,6 +11,7 @@ async function getTotalCount(lawdCd: string, dealYmd: string) {
     const xml = await res.text();
     const parsed = await parseStringPromise(xml);
     const totalCount = parseInt(parsed.response.body[0].totalCount[0]);
+    console.log(`🔍 총 거래 건수: ${totalCount}건`);
     return totalCount;
 }
 

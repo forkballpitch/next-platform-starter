@@ -1,0 +1,279 @@
+[
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": { "name": "Seoul" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [126.764, 37.413],
+                            [126.764, 37.701],
+                            [127.183, 37.701],
+                            [127.183, 37.413],
+                            [126.764, 37.413]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Incheon" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [126.4, 37.3],
+                            [126.4, 37.6],
+                            [126.9, 37.6],
+                            [126.9, 37.3],
+                            [126.4, 37.3]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Gyeonggi" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [126.6, 37.0],
+                            [126.6, 38.3],
+                            [127.8, 38.3],
+                            [127.8, 37.0],
+                            [126.6, 37.0]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Busan" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [128.8, 35.0],
+                            [128.8, 35.4],
+                            [129.3, 35.4],
+                            [129.3, 35.0],
+                            [128.8, 35.0]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Daegu" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [128.4, 35.6],
+                            [128.4, 36.0],
+                            [128.8, 36.0],
+                            [128.8, 35.6],
+                            [128.4, 35.6]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Gwangju" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [126.7, 35.1],
+                            [126.7, 35.3],
+                            [127.0, 35.3],
+                            [127.0, 35.1],
+                            [126.7, 35.1]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Daejeon" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [127.2, 36.2],
+                            [127.2, 36.5],
+                            [127.5, 36.5],
+                            [127.5, 36.2],
+                            [127.2, 36.2]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Ulsan" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [129.1, 35.4],
+                            [129.1, 35.7],
+                            [129.5, 35.7],
+                            [129.5, 35.4],
+                            [129.1, 35.4]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Sejong" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [127.1, 36.4],
+                            [127.1, 36.7],
+                            [127.4, 36.7],
+                            [127.4, 36.4],
+                            [127.1, 36.4]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Gangwon" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [127.0, 37.0],
+                            [127.0, 38.5],
+                            [129.3, 38.5],
+                            [129.3, 37.0],
+                            [127.0, 37.0]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Chungbuk" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [127.3, 36.3],
+                            [127.3, 37.2],
+                            [128.2, 37.2],
+                            [128.2, 36.3],
+                            [127.3, 36.3]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Chungnam" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [126.4, 36.2],
+                            [126.4, 37.1],
+                            [127.3, 37.1],
+                            [127.3, 36.2],
+                            [126.4, 36.2]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Jeonbuk" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [126.5, 35.3],
+                            [126.5, 36.2],
+                            [127.5, 36.2],
+                            [127.5, 35.3],
+                            [126.5, 35.3]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Jeonnam" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [126.0, 34.4],
+                            [126.0, 35.3],
+                            [127.4, 35.3],
+                            [127.4, 34.4],
+                            [126.0, 34.4]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Gyeongbuk" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [128.0, 35.6],
+                            [128.0, 37.5],
+                            [130.0, 37.5],
+                            [130.0, 35.6],
+                            [128.0, 35.6]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Gyeongnam" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [127.5, 34.8],
+                            [127.5, 35.7],
+                            [129.0, 35.7],
+                            [129.0, 34.8],
+                            [127.5, 34.8]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": { "name": "Jeju" },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [126.2, 33.2],
+                            [126.2, 33.6],
+                            [126.7, 33.6],
+                            [126.7, 33.2],
+                            [126.2, 33.2]
+                        ]
+                    ]
+                }
+            }
+        ]
+    }
+]
