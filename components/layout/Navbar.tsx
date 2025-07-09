@@ -54,7 +54,7 @@ export default function Navbar() {
             <div className="grow basis-0 font-semibold text-lg sm:text-xl text-orange-500 cursor-pointer sm:flex sm:gap-2">
                 {/* <MdPages className="text-4xl my-auto text-white-500" /> */}
                 <Link href="/" className="my-auto block text-white">
-                    엄마지도
+                    코딩공부
                 </Link>
             </div>
 
@@ -202,7 +202,7 @@ export default function Navbar() {
                     </Link>
                 )} */}
 
-                <button
+                {/* <button
                     id="menu-btn"
                     aria-label="menu-btn"
                     type="button"
@@ -247,7 +247,7 @@ export default function Navbar() {
                                   </button>
                               ))}
                     </div>
-                )}
+                )} */}
             </div>
         </nav>
     );
