@@ -25,7 +25,7 @@ export default function GoogleAd() {
         <ins
             className="adsbygoogle"
             style={{ display: 'block', textAlign: 'center' }}
-            data-ad-client="ca-pub-3543954618628961"
+            data-ad-client="ca-pub-8042920644832260"
             data-ad-format="auto"
             data-full-width-responsive="true"
         ></ins>

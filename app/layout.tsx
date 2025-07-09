@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="ko">
-            <meta name="google-adsense-account" content="ca-pub-3543954618628961" />
+            <meta name="google-adsense-account" content="ca-pub-8042920644832260" />
             <body className={`${noto_sans.className} h-screen flex flex-col overflow-hidden`}>
                 <NextProvider>
                     <NextLayout>{children}</NextLayout>
