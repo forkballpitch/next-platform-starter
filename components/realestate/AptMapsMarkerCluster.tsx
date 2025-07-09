@@ -91,11 +91,15 @@ function MarkerCluster({
     //     drawDongBoundaries();
     // }, [map]);
 
-    useEffect(() => {
-        if (!map) return;
+    // 렌더링된 지역 추적
+    const renderedAreasRef = useRef<Set<string>>(new Set());
 
+    useEffect(() => {
+        if (!map || !window.naver) return;
+
+        const renderedAreas = renderedAreasRef.current;
         navermaps.Event.addListener(map, 'center_changed', () => {
-            console.log('🗺️ 지도 중심 변경됨:', map.getCenter());
+            // console.log('🗺️ 지도 중심 변경됨:', map.getCenter());
             const bounds = map.getBounds();
             const sw = bounds.getSW();
             const ne = bounds.getNE();
@@ -105,75 +109,75 @@ function MarkerCluster({
             regions[0].features.forEach((region) => {
                 const polygon = turf.polygon(region.geometry.coordinates);
                 const intersects = turf.booleanIntersects(viewPortPolygon, polygon);
-                //  console.log(`${region.properties.name} 교차? ${intersects}`);
-                //   console.log(selectedArea);
-                setSelectedArea('seoul'); // 임시로 인천으로 설정, 실제로는 선택된 지역에 따라 변경됨
+
+                const areaName = region.properties.name; // '서울특별시' 이런 값
+                console.log(`🔍 ${areaName} 영역 교차 확인: ${intersects}`);
+                const areaKey = areaName.includes('Seoul')
+                    ? 'seoul'
+                    : areaName.includes('Incheon')
+                    ? 'incheon'
+                    : 'gyeonggi';
+                const renderKey = `${areaKey}_${selectedYear}`;
+
+                if (intersects) {
+                    console.log(`✅ ${areaKey} 영역 교차 확인됨`);
+                    if (!renderedAreas.has(renderKey)) {
+                        console.log(`🆕 ${renderKey}는 아직 마커를 표시하지 않았습니다. setup 실행`);
+                        renderedAreas.add(renderKey); // 표시한 것으로 등록
+
+                        setTimeout(() => setup(areaKey), 0); // 마커 세팅 실행
+                    } else {
+                        console.log(`⏩ ${renderKey}는 이미 마커를 표시했습니다. 건너뜁니다`);
+                    }
+                }
             });
-            // console.log(`========================`);
-
-            //   const bounds = map.getBounds();
-            //   const sw = bounds.getSW();
-            //   const ne = bounds.getNE();
-
-            //   const viewPortPolygon = turf.bboxPolygon([sw.lng(), sw.lat(), ne.lng(), ne.lat()]);
-
-            //   const areas = [
-            //       { name: 'seoul', geojson: regions },
-            //       { name: 'incheon', geojson: incheonjson },
-            //       { name: 'gyeonggi', geojson: gyeonggijson }
-            //   ];
-
-            //   for (const area of areas) {
-            //       const feature = area.geojson.features?.[0];
-            //       if (!feature) continue;
-
-            //       const polygon = turf.polygon(feature.geometry.coordinates);
-            //       const intersects = turf.booleanIntersects(viewPortPolygon, polygon);
-
-            //       console.log(`${area.name} 교차 여부: ${intersects}`);
-
-            //       if (intersects) {
-            //           setSelectedArea(area.name);
-            //           break; // 첫번째 교차만 반영
-            //       }
-            //   }
         });
-    }, [map, selectedArea]);
 
-    useEffect(() => {
-        console.log('📍 선택된 지역:', selectedArea);
-        if (!map || !window.naver) return;
+        async function setup(area: string) {
+            //  if (forceJson) return; // forceJson이 false면 실행하지 않음
 
-        async function setup() {
             setLoading(true);
-
+            console.log('📍 선택된 지역:', area);
             try {
                 const MarkerClustering = makeMarkerClustering(window.naver);
-                // selectedArea = 'incheon'; // 임시로 인천으로 설정, 실제로는 선택된 지역에 따라 변경됨
-                // const res = await fetch(`/data/apt/seoul/seoul_${selectedYear}.json`);
+
+                let data: any[] = [];
 
                 const now = new Date();
                 const currentYear = String(now.getFullYear());
-                const currentMonth = String(now.getMonth() + 1); // JS 월 +1
+                const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
 
-                let res;
+                // 1. API (현재 월)
+                // 해당 월의 거래 데이터가 있는 경우에만 API 호출 (실제 호출하여 가져오는 정보)
+                // if (selectedYear === currentYear && selectedMonth === currentMonth) {
+                //     const apiRes = await fetch(`/api/apt?year=${selectedYear}&month=${selectedMonth}&gu=${selectedGu}`);
+                //     const apiData = await apiRes.json();
+                //     data = [...data, ...apiData];
+                // }
 
-                if (selectedYear === currentYear && selectedMonth === currentMonth) {
-                    // if (true) {
-                    // 현재 달은 API
-                    res = await fetch(`/api/apt?year=${selectedYear}&month=${selectedMonth}&gu=${selectedGu}`);
-                    //임시
-                    // res = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
-                } else {
-                    // 과거 달은 기존 JSON
-                    console.log(selectedArea, selectedYear);
-                    res = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
+                // 2. JSON (과거 월)
+                if (!(selectedYear === currentYear && selectedMonth === currentMonth)) {
+                    if (area !== null) {
+                        console.log(`📂 ${area} 지역의 JSON 데이터 로드 시작 1`);
+                        const jsonRes = await fetch(`/data/apt/${area}/${area}_${selectedYear}.json`);
+                        const jsonData = await jsonRes.json();
+                        data = [...data, ...jsonData];
+                    } else {
+                        console.log(`📂 ${selectedArea} 지역의 JSON 데이터 로드 시작 2`);
+                        // 서울, 인천, 경기 외 지역은 JSON 데이터가 없으므로 빈 배열로 처리
+                        const jsonRes = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
+                        const jsonData = await jsonRes.json();
+                        data = [...data, ...jsonData];
+
+                        const jsonRes2 = await fetch(
+                            `/data/apt/${selectedArea}/${selectedArea}_${selectedYear}_7.json`
+                        );
+                        const jsonData2 = await jsonRes2.json();
+                        data = [...data, ...jsonData2];
+                    }
                 }
 
-                // const res = await fetch(`/data/apt/${selectedArea}/${selectedArea}_${selectedYear}.json`);
-                console.log('🔗 API URL:', res.url);
-                const data = await res.json();
-
+                // ✅ 이제 data = API + JSON 합쳐진 데이터
                 const allDeals: AptDeal[] = data
                     .filter((row: any) => row.latitude && row.longitude)
                     .map((row: any) => ({
@@ -286,11 +290,12 @@ function MarkerCluster({
                     }
                 });
 
-                if (clusterRef.current) {
-                    clusterRef.current.clear();
-                    clusterRef.current.setMap(null);
-                    clusterRef.current = null;
-                }
+                //클러스터를 지우는것
+                // if (clusterRef.current) {
+                //     //   clusterRef.current.clear();
+                //     clusterRef.current.setMap(null);
+                //     clusterRef.current = null;
+                // }
 
                 clusterRef.current = new MarkerClustering({
                     minClusterSize: 2,
@@ -325,7 +330,7 @@ function MarkerCluster({
             }
         }
 
-        setup();
+        setup(null);
 
         return () => {
             if (clusterRef.current) {

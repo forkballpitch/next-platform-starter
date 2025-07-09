@@ -41,7 +41,7 @@ export const NextLayout = ({ children }: Props) => {
                 {/* 광고 */}
                 <GoogleAd />
             </div>
-            <main className="flex-1 overflow-y-auto">{children}</main>
+            <main style={{ height: '100vh', overflowY: 'auto' }}>{children}</main>
             <div className="shrink-0">
                 <Footer />
             </div>

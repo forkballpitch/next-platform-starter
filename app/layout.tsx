@@ -8,14 +8,14 @@ export const metadata: Metadata = {
     alternates: {
         canonical: '/'
     },
-    title: '단어공부',
-    description: '단어공부',
+    title: '실거래지도',
+    description: '실거래지도',
     keywords: ['piggymom', '여행', '숙소', '호텔', '펜션', '최저가'],
     openGraph: {
-        title: '단어공부',
-        description: '단어공부',
+        title: '실거래지도',
+        description: '실거래지도',
         url: 'https://piggymom.vercel.app',
-        siteName: '단어공부',
+        siteName: '실거래지도',
         locale: 'ko_KR',
         type: 'website'
     },
