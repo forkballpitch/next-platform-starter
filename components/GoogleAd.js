@@ -8,7 +8,7 @@ export default function GoogleAd() {
         if (!existingScript) {
             const script = document.createElement('script');
             script.src =
-                'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3543954618628961';
+                'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8042920644832260';
             script.async = true;
             script.crossOrigin = 'anonymous';
             document.head.appendChild(script);
