@@ -24,6 +24,16 @@ interface RegionContextType {
     setSelectedDongCd: (value: string) => void;
     aptDeals: AptDeal[];
     setAptDeals: (deals: AptDeal[]) => void;
+    // ✅ 추가
+    targetCoord: Coordinate | null;
+    setTargetCoord: (coord: Coordinate) => void;
+    keyword: string;
+    setKeyword: (value: string) => void;
+}
+
+interface Coordinate {
+    latitude: number;
+    longitude: number;
 }
 
 const RegionContext = createContext<RegionContextType | undefined>(undefined);
@@ -34,6 +44,10 @@ export function RegionProvider({ children }: { children: React.ReactNode }) {
     const [selectedGuCd, setSelectedGuCd] = useState('');
     const [selectedDongCd, setSelectedDongCd] = useState('');
     const [aptDeals, setAptDeals] = useState<AptDeal[]>([]);
+
+    // ✅ 추가된 상태들
+    const [targetCoord, setTargetCoord] = useState<Coordinate | null>(null);
+    const [keyword, setKeyword] = useState('');
 
     return (
         <RegionContext.Provider
@@ -47,7 +61,12 @@ export function RegionProvider({ children }: { children: React.ReactNode }) {
                 selectedDongCd,
                 setSelectedDongCd,
                 aptDeals,
-                setAptDeals
+                setAptDeals,
+                // ✅ 추가된 값들
+                targetCoord,
+                setTargetCoord,
+                keyword,
+                setKeyword
             }}
         >
             {children}

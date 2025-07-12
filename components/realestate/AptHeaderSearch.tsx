@@ -120,25 +120,11 @@ export default function HeaderSearch() {
                 {/* 검색창 */}
                 <div className="flex-1 relative min-w-0">
                     <input
-                        className="
-                w-full
-                h-9
-                pl-4
-                pr-10
-                rounded-md
-                text-base
-                text-gray-800
-                placeholder-gray-400
-                border
-                border-orange-300
-                bg-white
-                focus:outline-none
-                focus:ring-2
-                focus:ring-orange-600
-            "
-                        placeholder=""
+                        className="w-full h-9 pl-4 pr-10 rounded-md text-base text-gray-800 placeholder-gray-400 border border-orange-300 bg-white focus:outline-none focus:ring-2 focus:ring-orange-600"
+                        placeholder="아파트, 지역, 학교명을 입력하세요"
                         value={localInput}
-                        onChange={(e) => setLocalInput(e.target.value)}
+                        readOnly // ✅ 직접 입력 막기 (선택사항)
+                        onClick={() => router.push('/screen/aptsearch')} // ✅ 페이지 이동
                     />
                     <button
                         onClick={handleSearch}

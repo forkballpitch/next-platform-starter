@@ -8,7 +8,7 @@ import * as turf from '@turf/turf';
 import regions from '@/data/apt/regions.json'; // 서울 경계 GeoJSON
 import incheonjson from '@/data/apt/incheon.json';
 import gyeonggijson from '@/data/apt/gyeonggi.json';
-
+import { useRegion } from '@/components/realestate/RegionContext';
 interface AptDeal {
     apt: string;
     date: string;
@@ -91,6 +91,62 @@ function MarkerCluster({
     //     drawDongBoundaries();
     // }, [map]);
 
+    const { targetCoord } = useRegion();
+
+    useEffect(() => {
+        if (!map || !navermaps) return;
+
+        if (targetCoord && map) {
+            const pos = new navermaps.LatLng(targetCoord.latitude, targetCoord.longitude);
+
+            // 동일 좌표의 학원 목록 가져오기
+            const coordKey = `${targetCoord.latitude},${targetCoord.longitude}`;
+            // const matchedAcademies = academyData.filter((item) => `${item.latitude},${item.longitude}` === coordKey);
+
+            const marker = new navermaps.Marker({ position: pos, map });
+
+            // InfoWindow 내용 구성
+            const content = `<div>📍 검색된 위치입니다</div>`;
+
+            //학원 리스트 스크롤
+            const infoWindow = new navermaps.InfoWindow({
+                content: `
+                                <div style="padding:8px;font-size:12px;max-width:220px;max-height:160px;overflow-y:auto;">
+                                <style>
+                                    div::-webkit-scrollbar {
+                                    width: 6px;
+                                    }
+                                    div::-webkit-scrollbar-thumb {
+                                    background-color: #888;
+                                    border-radius: 4px;
+                                    }
+                                    div::-webkit-scrollbar-track {
+                                    background-color: #f0f0f0;
+                                    }
+                                </style>
+                                ${content}
+                                </div>
+                            `
+            });
+
+            navermaps.Event.addListener(marker, 'click', () => {
+                if (currentInfoWindowRef.current) currentInfoWindowRef.current.close();
+                infoWindow.open(map, marker);
+                currentInfoWindowRef.current = infoWindow;
+            });
+
+            infoWindow.open(map, marker); // ✅ 자동으로 열리게
+
+            map.setZoom(17);
+            map.panTo(pos);
+            //setTargetCoord(null); // 한 번만 실행
+        }
+
+        // if (targetCoord) {
+        //     const latLng = new navermaps.LatLng(targetCoord.latitude, targetCoord.longitude);
+        //     map.panTo(latLng); // ✅ 지도 중심 이동
+        // }
+    }, [targetCoord, map]);
     // 렌더링된 지역 추적
     const renderedAreasRef = useRef<Set<string>>(new Set());
 

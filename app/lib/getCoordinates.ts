@@ -12,7 +12,7 @@ export const getCoordinates = async (address) => {
 
         const data = await response.json();
         const result = data.addresses?.[0];
-
+        console.warn(`📍 주소에 대한 좌표: ${result.y} , ${result.x}`);
         if (result) {
             return {
                 latitude: parseFloat(result.y), // 위도
