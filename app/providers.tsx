@@ -39,10 +39,12 @@ export const NextLayout = ({ children }: Props) => {
                 <KakaoAd />
 
                 {/* 광고 */}
-                <GoogleAd />
+                {/* <GoogleAd /> */}
             </div>
             <main style={{ height: '100vh', overflowY: 'auto' }}>{children}</main>
-            <div className="shrink-0">{/* <Footer /> */}</div>
+            <div className="shrink-0">
+                <Footer />
+            </div>
         </div>
     );
 };

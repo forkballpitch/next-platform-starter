@@ -162,6 +162,12 @@ function MarkerCluster({
                         const jsonRes = await fetch(`/data/apt/${area}/${area}_${selectedYear}.json`);
                         const jsonData = await jsonRes.json();
                         data = [...data, ...jsonData];
+
+                        const jsonRes2 = await fetch(
+                            `/data/apt/${selectedArea}/${selectedArea}_${selectedYear}_7.json`
+                        );
+                        const jsonData2 = await jsonRes2.json();
+                        data = [...data, ...jsonData2];
                     } else {
                         console.log(`📂 ${selectedArea} 지역의 JSON 데이터 로드 시작 2`);
                         // 서울, 인천, 경기 외 지역은 JSON 데이터가 없으므로 빈 배열로 처리
@@ -457,17 +463,29 @@ function NaverMapsMarkerCluster() {
                 />
             </NaverMap>
 
-            <div className="absolute top-4 left-4 z-50 bg-white shadow p-2 rounded flex gap-2 text-sm flex-wrap">
+            <div
+                className="absolute top-4 left-4 z-50 bg-white shadow p-2 rounded flex gap-2 text-sm flex-wrap"
+                style={{ marginLeft: '30px', borderRadius: '8px', backgroundColor: 'rgb(214 167 255)' }}
+            >
                 <select
                     value={selectedYear}
                     onChange={(e) => setSelectedYear(e.target.value)}
                     className="border p-1 rounded"
                 >
+                    <option value="2024">2015</option>
+                    <option value="2024">2016</option>
+                    <option value="2024">2017</option>
+                    <option value="2024">2018</option>
+                    <option value="2024">2019</option>
+                    <option value="2024">2020</option>
+                    <option value="2024">2021</option>
+                    <option value="2024">2022</option>
+                    <option value="2024">2023</option>
                     <option value="2024">2024</option>
                     <option value="2025">2025</option>
                 </select>
 
-                <select
+                {/* <select
                     value={selectedMonth}
                     onChange={(e) => setSelectedMonth(e.target.value)}
                     className="border p-1 rounded"
@@ -503,7 +521,7 @@ function NaverMapsMarkerCluster() {
                             {dong.name}
                         </option>
                     ))}
-                </select>
+                </select> */}
             </div>
 
             {loading && (

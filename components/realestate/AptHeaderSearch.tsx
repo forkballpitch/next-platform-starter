@@ -19,12 +19,13 @@ export default function HeaderSearch() {
     const [showPopup, setShowPopup] = useState(false); // ✅ 팝업 표시 여부
 
     useEffect(() => {
-        if (localInput.trim()) {
-            const filtered = data.filter((item) => item.aca_nm.includes(localInput)).map((item) => item.aca_nm);
-            setSuggestions(filtered.slice(0, 5));
-        } else {
-            setSuggestions([]);
-        }
+        console.log('HeaderSearch mounted');
+        // if (localInput.trim()) {
+        //     const filtered = data.filter((item) => item.aca_nm.includes(localInput)).map((item) => item.aca_nm);
+        //     setSuggestions(filtered.slice(0, 5));
+        // } else {
+        //     setSuggestions([]);
+        // }
     }, [localInput]);
 
     useEffect(() => {
