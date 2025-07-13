@@ -6,9 +6,8 @@ import guDongData from '@/data/apt/seoulGuDong.json';
 import { makeMarkerClustering } from './marker-cluster'; // ✅
 import * as turf from '@turf/turf';
 import regions from '@/data/apt/regions.json'; // 서울 경계 GeoJSON
-import incheonjson from '@/data/apt/incheon.json';
-import gyeonggijson from '@/data/apt/gyeonggi.json';
 import { useRegion } from '@/components/realestate/RegionContext';
+
 interface AptDeal {
     apt: string;
     date: string;
