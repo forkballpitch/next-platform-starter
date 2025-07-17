@@ -6,7 +6,7 @@ import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
 import qs from 'qs';
 import axios from 'axios';
-import puppeteer from 'puppeteer';
+// import puppeteer from 'puppeteer';
 
 const NAVER_CLIENT_ID = 'batn8474jt';
 const NAVER_CLIENT_SECRET = 'QLoR1GARl50zrQN3d9rPRfEiS1wG9LtBiaGWAAG4';
@@ -48,56 +48,56 @@ async function getCoordinates(address: string) {
     }
 }
 
-async function getSessionCookie() {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
+// async function getSessionCookie() {
+//     const browser = await puppeteer.launch({ headless: true });
+//     const page = await browser.newPage();
 
-    await page.goto('https://rt.molit.go.kr/pt/xls/xls.do?mobileAt=', {
-        waitUntil: 'networkidle2'
-    });
+//     await page.goto('https://rt.molit.go.kr/pt/xls/xls.do?mobileAt=', {
+//         waitUntil: 'networkidle2'
+//     });
 
-    // ✅ 세션 활성화용 요청
-    await page.evaluate(() => {
-        const form = new URLSearchParams();
-        form.append('srhThingNo', 'A');
-        form.append('srhDelngSecd', '1');
-        form.append('srhAddrGbn', '1');
-        form.append('srhLfstsSecd', '1');
-        form.append('sidoNm', '서울특별시');
-        form.append('sggNm', '전체');
-        form.append('emdNm', '전체');
-        form.append('loadNm', '전체');
-        form.append('areaNm', '전체');
-        form.append('hsmpNm', '전체');
-        form.append('srhFromDt', '2025-07-14');
-        form.append('srhToDt', '2025-07-14');
-        form.append('srhSidoCd', '11000');
+//     // ✅ 세션 활성화용 요청
+//     await page.evaluate(() => {
+//         const form = new URLSearchParams();
+//         form.append('srhThingNo', 'A');
+//         form.append('srhDelngSecd', '1');
+//         form.append('srhAddrGbn', '1');
+//         form.append('srhLfstsSecd', '1');
+//         form.append('sidoNm', '서울특별시');
+//         form.append('sggNm', '전체');
+//         form.append('emdNm', '전체');
+//         form.append('loadNm', '전체');
+//         form.append('areaNm', '전체');
+//         form.append('hsmpNm', '전체');
+//         form.append('srhFromDt', '2025-07-14');
+//         form.append('srhToDt', '2025-07-14');
+//         form.append('srhSidoCd', '11000');
 
-        return fetch('/pt/xls/ptXlsDownDataCheck.do', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: form
-        });
-    });
+//         return fetch('/pt/xls/ptXlsDownDataCheck.do', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+//                 'X-Requested-With': 'XMLHttpRequest'
+//             },
+//             body: form
+//         });
+//     });
 
-    const cookies = await page.cookies();
-    await browser.close();
+//     const cookies = await page.cookies();
+//     await browser.close();
 
-    const sessionCookies = cookies
-        .filter((c) => c.name === 'JSESSIONID' || c.name === 'WMONID')
-        .map((c) => `${c.name}=${c.value}`)
-        .join('; ');
+//     const sessionCookies = cookies
+//         .filter((c) => c.name === 'JSESSIONID' || c.name === 'WMONID')
+//         .map((c) => `${c.name}=${c.value}`)
+//         .join('; ');
 
-    console.log('✅ 세션 쿠키 추출 완료:', sessionCookies);
-    return sessionCookies;
-}
+//     console.log('✅ 세션 쿠키 추출 완료:', sessionCookies);
+//     return sessionCookies;
+// }
 
 export async function GET() {
     try {
-        const cookieHeader = await getSessionCookie();
+        // const cookieHeader = await getSessionCookie();
 
         const headers = {
             Accept: 'application/json, text/javascript, */*; q=0.01',
