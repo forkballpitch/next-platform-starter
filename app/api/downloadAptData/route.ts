@@ -1,4 +1,5 @@
 // app/api/download-apt/route.ts
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 import iconv from 'iconv-lite';
