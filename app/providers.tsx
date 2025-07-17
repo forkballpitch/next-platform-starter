@@ -10,6 +10,8 @@ import { Toaster } from 'react-hot-toast';
 import { SessionProvider } from 'next-auth/react';
 import GoogleAnalytics from './googleAnalytics';
 import KakaoAd from '@/components/ads/KakaoAdFitClient';
+
+import DownloadButton from '@/components/realestate/DownloadButton';
 interface Props {
     children?: React.ReactNode;
 }
@@ -37,7 +39,7 @@ export const NextLayout = ({ children }: Props) => {
             <div className="shrink-0">
                 <Navbar />
                 <KakaoAd />
-
+                <DownloadButton />
                 {/* 광고 */}
                 {/* <GoogleAd /> */}
             </div>

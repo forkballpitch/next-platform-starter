@@ -255,7 +255,9 @@ function MarkerCluster({
                 let data: any[] = [];
 
                 // ✅ CSV 파일 경로 예시: `/data/apt/서울/apt_202507.csv`
-                const csvRes = await fetch(`/data/apt/seoul/seoul_2025_07.csv`);
+                const csvRes = await fetch(
+                    `https://ygmifhzjzruxsctk.public.blob.vercel-storage.com/seoul_apt_2025_07.csv`
+                );
                 if (!csvRes.ok) throw new Error('CSV 파일을 불러올 수 없습니다');
                 const csvText = await csvRes.text();
 
