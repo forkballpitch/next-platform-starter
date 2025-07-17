@@ -72,7 +72,7 @@ async function getSessionCookie() {
 export async function GET() {
     try {
         const cookieHeader = await getSessionCookie();
-
+        console.log('✅ 세션 쿠키:', cookieHeader);
         const headers = {
             Accept: 'application/json, text/javascript, */*; q=0.01',
             'Accept-Encoding': 'gzip, deflate, br, zstd',
