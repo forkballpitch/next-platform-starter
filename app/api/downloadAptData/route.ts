@@ -97,30 +97,27 @@ async function getSessionCookie() {
 
 export async function GET() {
     try {
-        //const cookieHeader = await getSessionCookie();
+        const cookieHeader = await getSessionCookie();
 
-        // const headers = {
-        //     Accept: 'application/json, text/javascript, */*; q=0.01',
-        //     'Accept-Encoding': 'gzip, deflate, br, zstd',
-        //     'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-        //     Connection: 'keep-alive',
-        //     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        //     Cookie: cookieHeader,
-        //     Host: 'rt.molit.go.kr',
-        //     Origin: 'https://rt.molit.go.kr',
-        //     Referer: 'https://rt.molit.go.kr/pt/xls/xls.do?mobileAt=',
-        //     'Sec-Fetch-Dest': 'empty',
-        //     'Sec-Fetch-Mode': 'cors',
-        //     'Sec-Fetch-Site': 'same-origin',
-        //     'User-Agent':
-        //         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-        //     'X-Requested-With': 'XMLHttpRequest',
-        //     'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
-        //     'sec-ch-ua-mobile': '?0',
-        //     'sec-ch-ua-platform': '"macOS"'
-        // };
         const headers = {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            Accept: 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+            Connection: 'keep-alive',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            // Cookie: cookieHeader,
+            Host: 'rt.molit.go.kr',
+            Origin: 'https://rt.molit.go.kr',
+            Referer: 'https://rt.molit.go.kr/pt/xls/xls.do?mobileAt=',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'User-Agent':
+                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+            'X-Requested-With': 'XMLHttpRequest',
+            'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"macOS"'
         };
 
         await axios.post(urlCheck, qs.stringify(postData), { headers });
