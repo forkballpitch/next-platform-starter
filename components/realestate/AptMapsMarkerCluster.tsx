@@ -254,17 +254,69 @@ function MarkerCluster({
 
                 let data: any[] = [];
 
-                // ✅ CSV 파일 경로 예시: `/data/apt/서울/apt_202507.csv`
-                const csvRes = await fetch(
-                    `https://ygmifhzjzruxsctk.public.blob.vercel-storage.com/seoul_apt_2025_07.csv`
-                );
-                if (!csvRes.ok) throw new Error('CSV 파일을 불러올 수 없습니다');
-                const csvText = await csvRes.text();
+                const now = new Date();
+                const currentYear = String(now.getFullYear());
+                const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
 
-                // ✅ CSV 파싱: 헤더를 기준으로 행 나누기
-                const rows = parseCSV(csvText);
+                if (!(selectedYear === currentYear && selectedMonth === currentMonth)) {
+                    for (let m = 1; m <= 12; m++) {
+                        const monthStr = m.toString().padStart(2, '0'); // "01", "02", ..., "12"
 
-                data = rows;
+                        const targetArea = area !== null ? area : selectedArea;
+                        console.log(`📂 ${targetArea} 지역의 CSV 데이터 로드 (${selectedYear}_${monthStr})`);
+
+                        try {
+                            const csvRes = await fetch(
+                                `https://ygmifhzjzruxsctk.public.blob.vercel-storage.com/${targetArea}_apt_${selectedYear}_${monthStr}.csv?t=${now}`
+                            );
+                            if (!csvRes.ok) throw new Error('CSV 파일을 불러올 수 없습니다');
+
+                            const csvText = await csvRes.text();
+
+                            // ✅ CSV 파싱
+                            const rows = parseCSV(csvText);
+
+                            data = [...data, ...rows];
+                        } catch (e) {
+                            console.warn(`⚠️ ${targetArea}_${selectedYear}_${monthStr}.csv 파일을 불러오지 못했습니다`);
+                        }
+                    }
+                }
+
+                // 2. JSON (과거 월)
+                // if (!(selectedYear === currentYear && selectedMonth === currentMonth)) {
+                //     for (let m = 1; m <= 12; m++) {
+                //         const monthStr = m.toString().padStart(2, '0'); // "01", "02", ..., "12"
+
+                //         if (area !== null) {
+                //             console.log(`📂 ${area} 지역의 JSON 데이터 로드 (${selectedYear}_${monthStr})`);
+                //             // try {
+                //             //     const jsonRes = await fetch(
+                //             //         `/data/apt/${area}/${area}_${selectedYear}_${monthStr}.json`
+                //             //     );
+                //             //     if (!jsonRes.ok) throw new Error('파일 없음');
+                //             //     const jsonData = await jsonRes.json();
+                //             //     data = [...data, ...jsonData];
+                //             // } catch (e) {
+                //             //     console.warn(`⚠️ ${area}_${selectedYear}_${monthStr}.json 파일을 불러오지 못했습니다`);
+                //             // }
+                //         } else {
+                //             console.log(`📂 ${selectedArea} 지역의 JSON 데이터 로드 (${selectedYear}_${monthStr})`);
+                //             // try {
+                //             //     const jsonRes = await fetch(
+                //             //         `/data/apt/${selectedArea}/${selectedArea}_${selectedYear}_${monthStr}.json`
+                //             //     );
+                //             //     if (!jsonRes.ok) throw new Error('파일 없음');
+                //             //     const jsonData = await jsonRes.json();
+                //             //     data = [...data, ...jsonData];
+                //             // } catch (e) {
+                //             //     console.warn(
+                //             //         `⚠️ ${selectedArea}_${selectedYear}_${monthStr}.json 파일을 불러오지 못했습니다`
+                //             //     );
+                //             // }
+                //         }
+                //     }
+                // }
 
                 const allDeals: AptDeal[] = data
                     .filter((row: any) => row.latitude && row.longitude)
