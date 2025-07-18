@@ -828,7 +828,7 @@ function NaverMapsMarkerCluster() {
 
             <div
                 className="absolute top-4 left-4 z-50 bg-white shadow p-2 rounded flex gap-2 text-sm flex-wrap"
-                style={{ marginLeft: '30px', borderRadius: '8px', backgroundColor: 'rgb(214 167 255)' }}
+                style={{ marginLeft: '30px', borderRadius: '8px', backgroundColor: 'white' }}
             >
                 <select
                     value={selectedYear}
